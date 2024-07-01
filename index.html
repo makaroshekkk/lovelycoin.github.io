@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,64 +23,35 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
+        .game-container img {
+            width: 150px;
+            height: 150px;
             cursor: pointer;
             margin-top: 20px;
         }
 
-        button:hover {
-            background-color: #45a049;
+        .score {
+            font-size: 24px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>Тык-Тык Игра</h1>
-        <button id="clickButton">ТЫКНИ МЕНЯ!</button>
-        <p>Очки: <span id="score">0</span></p>
-        <p>Время: <span id="timer">30</span> сек</p>
+        <div class="score">Очки: <span id="score">0</span></div>
+        <img src="https://via.placeholder.com/150" id="clickButton" alt="Кнопка">
     </div>
 
     <script>
         let score = 0;
-        let timeLeft = 30;
-        let timerInterval;
 
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
-        const timerDisplay = document.getElementById('timer');
 
         clickButton.addEventListener('click', () => {
             score++;
             scoreDisplay.textContent = score;
         });
-
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerDisplay.textContent = timeLeft;
-                if (timeLeft === 0) {
-                    clearInterval(timerInterval);
-                    alert(`Игра окончена! Ваш счёт: ${score}`);
-                    resetGame();
-                }
-            }, 1000);
-        }
-
-        function resetGame() {
-            score = 0;
-            timeLeft = 30;
-            scoreDisplay.textContent = score;
-            timerDisplay.textContent = timeLeft;
-        }
-
-        startTimer();
     </script>
 </body>
 </html>
