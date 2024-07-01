@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device=width, initial-scale=1.0">
-    <title>Тык-Тык Игра</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,6 +17,7 @@
 
         .game-container {
             text-align: center;
+            position: relative; /* Для позиционирования анимированных сердечек */
         }
 
         .game-container img {
@@ -35,6 +36,27 @@
             outline: none;
             background-color: transparent;
         }
+
+        /* Стили для анимации */
+        .heart {
+            position: absolute;
+            width: 40px; /* Размер сердечка */
+            height: 40px;
+            background-image: url('1681457364_pictures-pibig-info-p-serdtse-illyustratsiya-vkontakte-1.png'); /* Путь к вашей картинке сердечка */
+            background-size: cover;
+            animation: fly 1s linear;
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-300px);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -48,11 +70,26 @@
 
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
+        const gameContainer = document.querySelector('.game-container');
 
-        clickButton.addEventListener('click', () => {
+        clickButton.addEventListener('click', (event) => {
             score++;
-            scoreDisplay.textContent = score;
+            scoreDisplay.innerText = score;
+            createHeartAnimation(event.clientX, event.clientY);
         });
+
+        function createHeartAnimation(clickX, clickY) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = `${clickX - 20}px`; // Позиция сердечка относительно клика пользователя
+            heart.style.top = `${clickY - 20}px`;
+            gameContainer.appendChild(heart);
+
+            // Удаление сердечка после окончания анимации
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
     </script>
 </body>
 </html>
