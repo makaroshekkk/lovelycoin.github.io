@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device=width, initial-scale=1.0">
     <title>Тык-Тык Игра</title>
     <style>
         body {
@@ -12,34 +12,35 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #ffe6e6;
         }
 
         .game-container {
             text-align: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .game-container img {
-            width: 150px;
-            height: 150px;
+            width: 300px;
+            height: 300px;
             cursor: pointer;
             margin-top: 20px;
+            border: none;
+            outline: none;
         }
 
         .score {
-            font-size: 24px;
+            font-size: 36px;
             margin-bottom: 20px;
+            border: none;
+            outline: none;
+            background-color: transparent;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
         <div class="score">Очки: <span id="score">0</span></div>
-        <img src="https://via.placeholder.com/150" id="clickButton" alt="Кнопка">
+        <img src="1.png" id="clickButton" alt="Кнопка">
     </div>
 
     <script>
