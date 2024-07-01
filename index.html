@@ -28,6 +28,8 @@
             border: none;
             outline: none;
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* Убирает синий квадрат при нажатии на мобильных устройствах */
+            -webkit-user-select: none; /* Запрещает выделение элемента */
+            user-select: none;
         }
 
         .score {
@@ -57,6 +59,16 @@
                 transform: translateY(-300px);
                 opacity: 0;
             }
+        }
+
+        /* Запрещаем выделение и подсветку всех элементов на странице */
+        * {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
     </style>
 </head>
