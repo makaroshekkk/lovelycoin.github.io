@@ -75,7 +75,12 @@
         clickButton.addEventListener('click', (event) => {
             score++;
             scoreDisplay.innerText = score;
-            createHeartAnimation(event.clientX, event.clientY);
+
+            const containerRect = gameContainer.getBoundingClientRect();
+            const clickX = event.clientX - containerRect.left;
+            const clickY = event.clientY - containerRect.top;
+
+            createHeartAnimation(clickX, clickY);
         });
 
         function createHeartAnimation(clickX, clickY) {
