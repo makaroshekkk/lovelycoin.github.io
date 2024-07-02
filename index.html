@@ -78,7 +78,7 @@
 <body>
     <div class="game-container">
         <div class="score">Очки: <span id="score">0</span></div>
-        <img src="1.png" id="clickButton" class="click-animation" alt="Кнопка">
+        <img src="1.png" id="clickButton" alt="Кнопка">
     </div>
 
     <script>
@@ -94,13 +94,13 @@
 
             const containerRect = gameContainer.getBoundingClientRect();
             const clickX = event.clientX - containerRect.left;
+            const clickY = event.clientY - containerRect.top;
             const buttonCenterX = clickButton.offsetWidth / 2;
             const direction = clickX < buttonCenterX ? 'left' : 'right'; // Определяем направление клика
 
             clickButton.style.setProperty('--rotate-deg', `${direction === 'left' ? '-' : ''}10deg`); // Устанавливаем угол наклона кнопки
-            setTimeout(() => {
-                clickButton.style.setProperty('--rotate-deg', '0deg'); // Сбрасываем угол наклона после анимации
-            }, 200); // Время анимации в миллисекундах
+
+            createHeartAnimation(clickX, clickY); // Вызываем функцию для создания анимации сердечка
         });
 
         function createHeartAnimation(clickX, clickY) {
