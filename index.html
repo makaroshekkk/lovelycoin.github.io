@@ -30,6 +30,11 @@
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* Убирает синий квадрат при нажатии на мобильных устройствах */
             -webkit-user-select: none; /* Запрещает выделение элемента */
             user-select: none;
+            transition: transform 0.2s ease; /* Анимация для кнопки */
+        }
+
+        .game-container img:active {
+            transform: scale(0.9); /* Пример изменения масштаба кнопки при активации */
         }
 
         .score {
@@ -47,7 +52,7 @@
             height: 40px;
             background-image: url('heart.png'); /* Путь к вашей картинке сердечка */
             background-size: cover;
-            animation: fly 1.5s linear;
+            animation: fly 1s linear; /* Ускоряем анимацию до 1 секунды */
         }
 
         @keyframes fly {
@@ -75,7 +80,7 @@
 <body>
     <div class="game-container">
         <div class="score">Очки: <span id="score">0</span></div>
-        <img src="1.png" id="clickButton" alt="Кнопка">
+        <img src="1.png" id="clickButton" class="click-animation" alt="Кнопка">
     </div>
 
     <script>
