@@ -17,7 +17,7 @@
 
         .game-container {
             text-align: center;
-            position: relative; /* Для позиционирования анимированных сердечек */
+            position: relative;
         }
 
         .game-container img {
@@ -27,8 +27,8 @@
             margin-top: 20px;
             border: none;
             outline: none;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* Убирает синий квадрат при нажатии на мобильных устройствах */
-            -webkit-user-select: none; /* Запрещает выделение элемента */
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-user-select: none;
             user-select: none;
         }
 
@@ -40,12 +40,11 @@
             background-color: transparent;
         }
 
-        /* Стили для анимации */
         .heart {
             position: absolute;
-            width: 40px; /* Размер сердечка */
+            width: 40px;
             height: 40px;
-            background-image: url('heart.png'); /* Путь к вашей картинке сердечка */
+            background-image: url('heart.png');
             background-size: cover;
             animation: fly 1.5s linear;
         }
@@ -61,7 +60,6 @@
             }
         }
 
-        /* Запрещаем выделение и подсветку всех элементов на странице */
         * {
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             -webkit-touch-callout: none;
@@ -99,11 +97,10 @@
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`; // Позиция сердечка относительно клика пользователя
+            heart.style.left = `${clickX - 20}px`;
             heart.style.top = `${clickY - 20}px`;
             gameContainer.appendChild(heart);
 
-            // Удаление сердечка после окончания анимации
             heart.addEventListener('animationend', () => {
                 heart.remove();
             });
