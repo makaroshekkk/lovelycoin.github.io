@@ -99,8 +99,8 @@
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = ${clickX - 20}px; // Позиция сердечка относительно клика пользователя
-            heart.style.top = ${clickY - 20}px;
+            heart.style.left = `${clickX - 20}px`; // Позиция сердечка относительно клика пользователя
+            heart.style.top = `${clickY - 20}px`;
             gameContainer.appendChild(heart);
 
             // Удаление сердечка после окончания анимации
