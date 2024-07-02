@@ -47,7 +47,7 @@
             height: 40px;
             background-image: url('heart.png'); /* Путь к вашей картинке сердечка */
             background-size: cover;
-            animation: fly 1.5s linear;
+            animation: fly 1s linear;
         }
 
         @keyframes fly {
@@ -85,15 +85,19 @@
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
 
-        clickButton.addEventListener('click', (event) => {
-            score++;
-            scoreDisplay.innerText = score;
+        clickButton.addEventListener('touchstart', (event) => {
+            event.preventDefault(); // Предотвращаем стандартное поведение для touchstart
+            for (let i = 0; i < event.touches.length; i++) {
+                score++;
+                scoreDisplay.innerText = score;
 
-            const containerRect = gameContainer.getBoundingClientRect();
-            const clickX = event.clientX - containerRect.left;
-            const clickY = event.clientY - containerRect.top;
+                const touch = event.touches[i];
+                const containerRect = gameContainer.getBoundingClientRect();
+                const touchX = touch.clientX - containerRect.left;
+                const touchY = touch.clientY - containerRect.top;
 
-            createHeartAnimation(clickX, clickY);
+                createHeartAnimation(touchX, touchY);
+            }
         });
 
         function createHeartAnimation(clickX, clickY) {
