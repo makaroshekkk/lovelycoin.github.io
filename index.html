@@ -85,26 +85,22 @@
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
 
-        clickButton.addEventListener('touchstart', (event) => {
-            event.preventDefault(); // Предотвращаем стандартное поведение для touchstart
-            for (let i = 0; i < event.touches.length; i++) {
-                score++;
-                scoreDisplay.innerText = score;
+        clickButton.addEventListener('click', (event) => {
+            score++;
+            scoreDisplay.innerText = score;
 
-                const touch = event.touches[i];
-                const containerRect = gameContainer.getBoundingClientRect();
-                const touchX = touch.clientX - containerRect.left;
-                const touchY = touch.clientY - containerRect.top;
+            const containerRect = gameContainer.getBoundingClientRect();
+            const clickX = event.clientX - containerRect.left;
+            const clickY = event.clientY - containerRect.top;
 
-                createHeartAnimation(touchX, touchY);
-            }
+            createHeartAnimation(clickX, clickY);
         });
-//авмпирнонгп
+
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`; // Позиция сердечка относительно клика пользователя
-            heart.style.top = `${clickY - 20}px`;
+            heart.style.left = ${clickX - 20}px; // Позиция сердечка относительно клика пользователя
+            heart.style.top = ${clickY - 20}px;
             gameContainer.appendChild(heart);
 
             // Удаление сердечка после окончания анимации
