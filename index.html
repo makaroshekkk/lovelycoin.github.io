@@ -17,7 +17,7 @@
 
         .game-container {
             text-align: center;
-            position: relative;
+            position: relative; /* Для позиционирования анимированных сердечек */
         }
 
         .game-container img {
@@ -27,8 +27,8 @@
             margin-top: 20px;
             border: none;
             outline: none;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            -webkit-user-select: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* Убирает синий квадрат при нажатии на мобильных устройствах */
+            -webkit-user-select: none; /* Запрещает выделение элемента */
             user-select: none;
         }
 
@@ -40,11 +40,12 @@
             background-color: transparent;
         }
 
+        /* Стили для анимации */
         .heart {
             position: absolute;
-            width: 40px;
+            width: 40px; /* Размер сердечка */
             height: 40px;
-            background-image: url('heart.png');
+            background-image: url('heart.png'); /* Путь к вашей картинке сердечка */
             background-size: cover;
             animation: fly 1.5s linear;
         }
@@ -60,6 +61,7 @@
             }
         }
 
+        /* Запрещаем выделение и подсветку всех элементов на странице */
         * {
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             -webkit-touch-callout: none;
@@ -71,36 +73,12 @@
     </style>
 </head>
 <body>
-    <div id="error-message" style="display: none; color: red; text-align: center;">
-        <h1>Access Denied</h1>
-        <p>This application can only be accessed via Telegram.</p>
-    </div>
-    <div class="game-container" id="game-container" style="display: none;">
+    <div class="game-container">
         <div class="score">Очки: <span id="score">0</span></div>
         <img src="1.png" id="clickButton" alt="Кнопка">
     </div>
 
     <script>
-        // Функция для получения параметров URL
-        function getUrlParams() {
-            const params = {};
-            const queryString = window.location.search.substring(1);
-            const regex = /([^&=]+)=([^&]*)/g;
-            let m;
-            while (m = regex.exec(queryString)) {
-                params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-            }
-            return params;
-        }
-
-        // Проверка наличия initData
-        const params = getUrlParams();
-        if (params.initData) {
-            document.getElementById('game-container').style.display = 'block';
-        } else {
-            document.getElementById('error-message').style.display = 'block';
-        }
-
         let score = 0;
 
         const clickButton = document.getElementById('clickButton');
@@ -121,10 +99,11 @@
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`;
-            heart.style.top = `${clickY - 20}px`;
+            heart.style.left = ${clickX - 20}px; // Позиция сердечка относительно клика пользователя
+            heart.style.top = ${clickY - 20}px;
             gameContainer.appendChild(heart);
 
+            // Удаление сердечка после окончания анимации
             heart.addEventListener('animationend', () => {
                 heart.remove();
             });
@@ -132,4 +111,3 @@
     </script>
 </body>
 </html>
-
