@@ -37,13 +37,26 @@
             transform: scale(0.98);
         }
 
-        .score {
-            font-size: 36px;
+        .score-wrapper {
             position: absolute;
             top: -50px;
             left: 50%;
             transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+        }
+
+        .score {
+            font-size: 36px;
             color: #a80040;
+        }
+
+        .heart-counter {
+            width: 40px;
+            height: 40px;
+            margin-left: 5px; /* Расстояние от счетчика */
+            background-image: url('heart_counter.png');
+            background-size: cover;
         }
 
         .heart {
@@ -78,7 +91,10 @@
 </head>
 <body>
     <div class="game-container">
-        <div class="score"><span id="score">0</span></div>
+        <div class="score-wrapper">
+            <div class="score"><span id="score">0</span></div>
+            <div class="heart-counter"></div>
+        </div>
         <img src="1.png" id="clickButton" alt="Кнопка">
     </div>
 
