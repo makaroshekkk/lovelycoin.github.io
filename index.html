@@ -66,6 +66,8 @@
             background-image: url('heart.png');
             background-size: cover;
             animation: fly 1s linear;
+            pointer-events: none; /* Позволяет событиям кликов и касаний проходить через элемент */
+            touch-action: none; /* Отключает стандартные действия браузера для касаний */
         }
 
         @keyframes fly {
@@ -145,7 +147,13 @@
             heart.style.top = `${clickY - 20}px`;
             gameContainer.appendChild(heart);
 
-            heart.addEventListener('animationend', () => {
+            // Задержка для анимации
+            setTimeout(() => {
+                heart.style.transform = 'translateY(-300px)';
+                heart.style.opacity = '0';
+            }, 50);
+
+            heart.addEventListener('transitionend', () => {
                 heart.remove();
             });
         }
