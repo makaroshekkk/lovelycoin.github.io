@@ -8,6 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -15,16 +16,59 @@
             background-color: #ffe6e6;
         }
 
-        .game-container {
-            text-align: center;
+        .top-panel {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffcccc;
+            border: 4px solid #a80040;
+            padding: 10px;
             position: relative;
         }
 
+        .panel-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .vertical-line {
+            width: 4px; /* Match the border width */
+            height: 100%;
+            background-color: #a80040;
+            position: absolute;
+        }
+
+        .line-left {
+            left: calc(33.33% - 2px); /* Adjust to align with the border */
+        }
+
+        .line-right {
+            right: calc(33.33% - 2px); /* Adjust to align with the border */
+        }
+
+        .score {
+            font-size: 36px;
+            margin: 0;
+            border: none;
+            outline: none;
+            background-color: transparent;
+        }
+
+        .game-container {
+            text-align: center;
+            position: relative;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: -60px; /* Move button slightly up */
+        }
+
         .game-container img {
-            width: 300px;
-            height: 300px;
+            width: 325px; /* Increase button size */
+            height: 325px; /* Increase button size */
             cursor: pointer;
-            margin-top: 20px;
             border: none;
             outline: none;
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -35,14 +79,6 @@
 
         .game-container img:active {
             transform: scale(0.9) rotateZ(var(--rotate-deg, 0deg)); /* Наклон кнопки */
-        }
-
-        .score {
-            font-size: 36px;
-            margin-bottom: 20px;
-            border: none;
-            outline: none;
-            background-color: transparent;
         }
 
         .heart {
@@ -76,8 +112,14 @@
     </style>
 </head>
 <body>
+    <div class="top-panel">
+        <div class="panel-item"></div>
+        <div class="vertical-line line-left"></div>
+        <div class="panel-item score"><span id="score">0</span></div>
+        <div class="vertical-line line-right"></div>
+        <div class="panel-item"></div>
+    </div>
     <div class="game-container">
-        <div class="score">Очки: <span id="score">0</span></div>
         <img src="1.png" id="clickButton" alt="Кнопка">
     </div>
 
@@ -91,7 +133,15 @@
 
         clickButton.addEventListener('click', (event) => {
             score++;
-            scoreDisplay.innerText = score;
+            if (score >= 1000000) {
+                const formattedScore = (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М';
+                scoreDisplay.innerText = formattedScore;
+            } else if (score >= 1000) {
+                const formattedScore = (score / 1000).toFixed(2).replace(/\.00$/, '') + 'К';
+                scoreDisplay.innerText = formattedScore;
+            } else {
+                scoreDisplay.innerText = score;
+            }
 
             // Устанавливаем угол наклона кнопки
             clickButton.style.setProperty('--rotate-deg', `${tiltLeft ? '-' : ''}10deg`);
