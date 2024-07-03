@@ -83,6 +83,7 @@
 
     <script>
         let score = 0;
+        let tiltLeft = true; // Переменная для отслеживания направления наклона
 
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
@@ -92,15 +93,17 @@
             score++;
             scoreDisplay.innerText = score;
 
+            // Устанавливаем угол наклона кнопки
+            clickButton.style.setProperty('--rotate-deg', `${tiltLeft ? '-' : ''}10deg`);
+
+            // Переключаем направление наклона
+            tiltLeft = !tiltLeft;
+
             const containerRect = gameContainer.getBoundingClientRect();
             const clickX = event.clientX - containerRect.left;
             const clickY = event.clientY - containerRect.top;
-            const buttonCenterX = clickButton.offsetWidth / 2;
-            const direction = clickX < buttonCenterX ? 'left' : 'right'; // Определяем направление клика
 
-            clickButton.style.setProperty('--rotate-deg', `${direction === 'left' ? '-' : ''}10deg`); // Устанавливаем угол наклона кнопки
-
-            createHeartAnimation(clickX, clickY); // Вызываем функцию для создания анимации сердечка
+            createHeartAnimation(clickX, clickY);
         });
 
         function createHeartAnimation(clickX, clickY) {
