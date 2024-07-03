@@ -66,8 +66,6 @@
             background-image: url('heart.png');
             background-size: cover;
             animation: fly 1s linear;
-            pointer-events: none; /* Позволяет событиям кликов и касаний проходить через элемент */
-            touch-action: none; /* Отключает стандартные действия браузера для касаний */
         }
 
         @keyframes fly {
@@ -101,32 +99,44 @@
     </div>
 
     <script>
+        let score = 0;
+
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
 
-        let score = 0;
+        // Обработчик для события click
+        clickButton.addEventListener('click', handleClick);
 
-        clickButton.addEventListener('pointerdown', (event) => {
-            event.preventDefault(); // Предотвращаем стандартное поведение браузера при клике или касании
+        // Обработчик для события touchstart
+        clickButton.addEventListener('touchstart', handleTouchStart);
+
+        function handleClick(event) {
+            event.preventDefault(); // Предотвращаем стандартное поведение, чтобы избежать двойных событий на мобильных устройствах
 
             score++;
             updateScoreDisplay();
 
             const containerRect = gameContainer.getBoundingClientRect();
-            let clickX, clickY;
-
-            // Обрабатываем касание или клик в зависимости от типа события
-            if (event.pointerType === 'touch') {
-                clickX = event.touches[0].clientX - containerRect.left;
-                clickY = event.touches[0].clientY - containerRect.top;
-            } else {
-                clickX = event.clientX - containerRect.left;
-                clickY = event.clientY - containerRect.top;
-            }
+            const clickX = event.clientX - containerRect.left;
+            const clickY = event.clientY - containerRect.top;
 
             createHeartAnimation(clickX, clickY);
-        });
+        }
+
+        function handleTouchStart(event) {
+            event.preventDefault(); // Предотвращаем стандартное поведение, чтобы избежать двойных событий на мобильных устройствах
+
+            const touch = event.touches[0];
+            const containerRect = gameContainer.getBoundingClientRect();
+            const clickX = touch.clientX - containerRect.left;
+            const clickY = touch.clientY - containerRect.top;
+
+            score++;
+            updateScoreDisplay();
+
+            createHeartAnimation(clickX, clickY);
+        }
 
         function updateScoreDisplay() {
             if (score >= 1000000) {
@@ -147,13 +157,7 @@
             heart.style.top = `${clickY - 20}px`;
             gameContainer.appendChild(heart);
 
-            // Задержка для анимации
-            setTimeout(() => {
-                heart.style.transform = 'translateY(-300px)';
-                heart.style.opacity = '0';
-            }, 50);
-
-            heart.addEventListener('transitionend', () => {
+            heart.addEventListener('animationend', () => {
                 heart.remove();
             });
         }
