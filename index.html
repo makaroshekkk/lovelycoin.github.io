@@ -95,24 +95,41 @@
             <div class="score"><span id="score">0</span></div>
             <div class="heart-counter"></div>
         </div>
-        <img src="1.png" id="clickButton" alt="Кнопка">
+        <img src="1.png" id="clickButton" alt="Кнопка" onclick="tiltButton(event)">
     </div>
 
     <script>
+        function tiltButton(event) {
+            const button = event.currentTarget;
+            const rect = button.getBoundingClientRect();
+            const offsetX = event.clientX - rect.left;
+            const offsetY = event.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            // Уменьшаем делитель для более мелкого наклона
+            const angleX = (offsetX - centerX) / 8;
+            const angleY = (offsetY - centerY) / 8;
+            
+            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
+            
+            setTimeout(() => {
+                button.style.transform = 'none';
+            }, 300); // Уменьшаем длительность анимации до 300 мс
+        }
+
         let score = 0;
 
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
 
-        // Обработчик для события click
         clickButton.addEventListener('click', handleClick);
-
-        // Обработчик для события touchstart
         clickButton.addEventListener('touchstart', handleTouchStart);
 
         function handleClick(event) {
-            event.preventDefault(); // Предотвращаем стандартное поведение, чтобы избежать двойных событий на мобильных устройствах
+            event.preventDefault();
 
             score++;
             updateScoreDisplay();
@@ -125,7 +142,7 @@
         }
 
         function handleTouchStart(event) {
-            event.preventDefault(); // Предотвращаем стандартное поведение, чтобы избежать двойных событий на мобильных устройствах
+            event.preventDefault();
 
             const touch = event.touches[0];
             const containerRect = gameContainer.getBoundingClientRect();
