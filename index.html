@@ -88,7 +88,6 @@
             user-select: none;
         }
     </style>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="game-container">
@@ -100,13 +99,20 @@
     </div>
 
     <script>
+        window.onload = function() {
+            if (window.screen.width <= window.outerWidth || window.screen.height <= window.outerHeight) {
+                window.outerWidth = window.screen.width;
+                window.outerHeight = window.screen.height;
+            }
+        };
+
         let score = 0;
 
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
 
-        // Функция для обработки клика и касания
+        // Общая функция для обработки событий click и touchstart
         function handleButtonClick(event) {
             event.preventDefault();
 
@@ -186,26 +192,6 @@
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
 
-        // Переход в полноэкранный режим при загрузке приложения
-        Telegram.WebApp.onEvent('ready', function() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch((err) => {
-                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                });
-            } else if (document.documentElement.webkitRequestFullscreen) { // Safari
-                document.documentElement.webkitRequestFullscreen().catch((err) => {
-                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                });
-            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                document.documentElement.mozRequestFullScreen().catch((err) => {
-                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                });
-            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-                document.documentElement.msRequestFullscreen().catch((err) => {
-                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-                });
-            }
-        });
     </script>
 </body>
 </html>
