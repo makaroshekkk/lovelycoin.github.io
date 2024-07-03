@@ -130,7 +130,7 @@
             updateScoreDisplay();
 
             // Вызываем функцию для наклона кнопки
-            tiltButton();
+            tiltButton(event);
         }
 
         // Функция для создания анимации сердечка
@@ -147,14 +147,25 @@
         }
 
         // Функция для наклона кнопки
-        function tiltButton() {
+        function tiltButton(event) {
             const button = clickButton;
             const rect = button.getBoundingClientRect();
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
 
-            const angleX = (event.clientX - rect.left - centerX) / 8;
-            const angleY = (event.clientY - rect.top - centerY) / 8;
+            let clientX, clientY;
+
+            if (event.type === 'click') {
+                clientX = event.clientX;
+                clientY = event.clientY;
+            } else if (event.type === 'touchstart') {
+                const touch = event.touches[0];
+                clientX = touch.clientX;
+                clientY = touch.clientY;
+            }
+
+            const angleX = (clientX - rect.left - centerX) / 8;
+            const angleY = (clientY - rect.top - centerY) / 8;
 
             button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
 
