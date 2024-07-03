@@ -99,98 +99,92 @@
     </div>
 
     <script>
-        // Ждём загрузки DOM
-        document.addEventListener('DOMContentLoaded', () => {
-            // Разворачиваем окно на весь экран
-            window.Telegram.WebApp.expand();
+        let score = 0;
 
-            let score = 0;
+        const clickButton = document.getElementById('clickButton');
+        const scoreDisplay = document.getElementById('score');
+        const gameContainer = document.querySelector('.game-container');
 
-            const clickButton = document.getElementById('clickButton');
-            const scoreDisplay = document.getElementById('score');
-            const gameContainer = document.querySelector('.game-container');
+        // Общая функция для обработки событий click и touchstart
+        function handleButtonClick(event) {
+            event.preventDefault();
 
-            // Общая функция для обработки событий click и touchstart
-            function handleButtonClick(event) {
-                event.preventDefault();
+            // Определяем координаты касания внутри кнопки
+            const buttonRect = clickButton.getBoundingClientRect();
+            let clickX, clickY;
 
-                // Определяем координаты касания внутри кнопки
-                const buttonRect = clickButton.getBoundingClientRect();
-                let clickX, clickY;
-
-                if (event.type === 'click') {
-                    clickX = event.clientX - buttonRect.left;
-                    clickY = event.clientY - buttonRect.top;
-                } else if (event.type === 'touchstart') {
-                    const touch = event.touches[0];
-                    clickX = touch.clientX - buttonRect.left;
-                    clickY = touch.clientY - buttonRect.top;
-                }
-
-                // Создаем анимацию сердечка
-                createHeartAnimation(clickX, clickY);
-
-                // Увеличиваем счетчик и обновляем его отображение
-                score++;
-                updateScoreDisplay();
-
-                // Вызываем функцию для наклона кнопки
-                tiltButton(event, buttonRect);
+            if (event.type === 'click') {
+                clickX = event.clientX - buttonRect.left;
+                clickY = event.clientY - buttonRect.top;
+            } else if (event.type === 'touchstart') {
+                const touch = event.touches[0];
+                clickX = touch.clientX - buttonRect.left;
+                clickY = touch.clientY - buttonRect.top;
             }
 
-            // Функция для создания анимации сердечка
-            function createHeartAnimation(clickX, clickY) {
-                const heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.style.left = `${clickX - 20}px`;
-                heart.style.top = `${clickY - 20}px`;
-                gameContainer.appendChild(heart);
+            // Создаем анимацию сердечка
+            createHeartAnimation(clickX, clickY);
 
-                heart.addEventListener('animationend', () => {
-                    heart.remove();
-                });
+            // Увеличиваем счетчик и обновляем его отображение
+            score++;
+            updateScoreDisplay();
+
+            // Вызываем функцию для наклона кнопки
+            tiltButton(event, buttonRect);
+        }
+
+        // Функция для создания анимации сердечка
+        function createHeartAnimation(clickX, clickY) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = `${clickX - 20}px`;
+            heart.style.top = `${clickY - 20}px`;
+            gameContainer.appendChild(heart);
+
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+
+        // Функция для наклона кнопки
+        function tiltButton(event, buttonRect) {
+            const button = clickButton;
+            const centerX = buttonRect.width / 2;
+            const centerY = buttonRect.height / 2;
+
+            let clientX, clientY;
+
+            if (event.type === 'click') {
+                clientX = event.clientX;
+                clientY = event.clientY;
+            } else if (event.type === 'touchstart') {
+                const touch = event.touches[0];
+                clientX = touch.clientX;
+                clientY = touch.clientY;
             }
 
-            // Функция для наклона кнопки
-            function tiltButton(event, buttonRect) {
-                const button = clickButton;
-                const centerX = buttonRect.width / 2;
-                const centerY = buttonRect.height / 2;
+            const angleX = (clientX - buttonRect.left - centerX) / 8;
+            const angleY = (clientY - buttonRect.top - centerY) / 8;
 
-                let clientX, clientY;
+            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
 
-                if (event.type === 'click') {
-                    clientX = event.clientX;
-                    clientY = event.clientY;
-                } else if (event.type === 'touchstart') {
-                    const touch = event.touches[0];
-                    clientX = touch.clientX;
-                    clientY = touch.clientY;
-                }
+            setTimeout(() => {
+                button.style.transform = 'none';
+            }, 300); // Уменьшаем длительность анимации до 300 мс
+        }
 
-                const angleX = (clientX - buttonRect.left - centerX) / 8;
-                const angleY = (clientY - buttonRect.top - centerY) / 8;
+        // Функция для обновления отображения счета
+        function updateScoreDisplay() {
+            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
+                : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
+                : score;
+            scoreDisplay.innerText = formattedScore;
+        }
 
-                button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
+        // Добавляем обработчики событий
+        clickButton.addEventListener('click', handleButtonClick);
+        clickButton.addEventListener('touchstart', handleButtonClick);
 
-                setTimeout(() => {
-                    button.style.transform = 'none';
-                }, 300); // Уменьшаем длительность анимации до 300 мс
-            }
-
-            // Функция для обновления отображения счета
-            function updateScoreDisplay() {
-                const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
-                    : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
-                    : score;
-                scoreDisplay.innerText = formattedScore;
-            }
-
-            // Добавляем обработчики событий
-            clickButton.addEventListener('click', handleButtonClick);
-            clickButton.addEventListener('touchstart', handleButtonClick);
-        });
     </script>
 </body>
 </html>
-
