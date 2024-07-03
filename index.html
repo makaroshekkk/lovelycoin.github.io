@@ -109,10 +109,18 @@
         function handleButtonClick(event) {
             event.preventDefault();
 
-            // Определяем координаты нажатия внутри контейнера игры
+            // Определяем координаты касания внутри контейнера игры
             const containerRect = gameContainer.getBoundingClientRect();
-            const clickX = event.clientX - containerRect.left;
-            const clickY = event.clientY - containerRect.top;
+            let clickX, clickY;
+
+            if (event.type === 'click') {
+                clickX = event.clientX - containerRect.left;
+                clickY = event.clientY - containerRect.top;
+            } else if (event.type === 'touchstart') {
+                const touch = event.touches[0];
+                clickX = touch.clientX - containerRect.left;
+                clickY = touch.clientY - containerRect.top;
+            }
 
             // Создаем анимацию сердечка
             createHeartAnimation(clickX, clickY);
