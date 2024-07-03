@@ -109,17 +109,17 @@
         function handleButtonClick(event) {
             event.preventDefault();
 
-            // Определяем координаты касания внутри контейнера игры
-            const containerRect = gameContainer.getBoundingClientRect();
+            // Определяем координаты касания внутри кнопки
+            const buttonRect = clickButton.getBoundingClientRect();
             let clickX, clickY;
 
             if (event.type === 'click') {
-                clickX = event.clientX - containerRect.left;
-                clickY = event.clientY - containerRect.top;
+                clickX = event.clientX - buttonRect.left;
+                clickY = event.clientY - buttonRect.top;
             } else if (event.type === 'touchstart') {
                 const touch = event.touches[0];
-                clickX = touch.clientX - containerRect.left;
-                clickY = touch.clientY - containerRect.top;
+                clickX = touch.clientX - buttonRect.left;
+                clickY = touch.clientY - buttonRect.top;
             }
 
             // Создаем анимацию сердечка
@@ -130,7 +130,7 @@
             updateScoreDisplay();
 
             // Вызываем функцию для наклона кнопки
-            tiltButton(event);
+            tiltButton(event, buttonRect);
         }
 
         // Функция для создания анимации сердечка
@@ -147,11 +147,10 @@
         }
 
         // Функция для наклона кнопки
-        function tiltButton(event) {
+        function tiltButton(event, buttonRect) {
             const button = clickButton;
-            const rect = button.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+            const centerX = buttonRect.width / 2;
+            const centerY = buttonRect.height / 2;
 
             let clientX, clientY;
 
@@ -164,8 +163,8 @@
                 clientY = touch.clientY;
             }
 
-            const angleX = (clientX - rect.left - centerX) / 8;
-            const angleY = (clientY - rect.top - centerY) / 8;
+            const angleX = (clientX - buttonRect.left - centerX) / 8;
+            const angleY = (clientY - buttonRect.top - centerY) / 8;
 
             button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
 
@@ -176,15 +175,10 @@
 
         // Функция для обновления отображения счета
         function updateScoreDisplay() {
-            if (score >= 1000000) {
-                const formattedScore = (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М';
-                scoreDisplay.innerText = formattedScore;
-            } else if (score >= 1000) {
-                const formattedScore = (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K';
-                scoreDisplay.innerText = formattedScore;
-            } else {
-                scoreDisplay.innerText = score;
-            }
+            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
+                : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
+                : score;
+            scoreDisplay.innerText = formattedScore;
         }
 
         // Добавляем обработчики событий
