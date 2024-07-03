@@ -99,14 +99,34 @@
     </div>
 
     <script>
-        let score = 0;
-
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
 
-        clickButton.addEventListener('click', (event) => {
+        let score = 0;
+
+        clickButton.addEventListener('pointerdown', (event) => {
+            event.preventDefault(); // Предотвращаем стандартное поведение браузера при клике или касании
+
             score++;
+            updateScoreDisplay();
+
+            const containerRect = gameContainer.getBoundingClientRect();
+            let clickX, clickY;
+
+            // Обрабатываем касание или клик в зависимости от типа события
+            if (event.pointerType === 'touch') {
+                clickX = event.touches[0].clientX - containerRect.left;
+                clickY = event.touches[0].clientY - containerRect.top;
+            } else {
+                clickX = event.clientX - containerRect.left;
+                clickY = event.clientY - containerRect.top;
+            }
+
+            createHeartAnimation(clickX, clickY);
+        });
+
+        function updateScoreDisplay() {
             if (score >= 1000000) {
                 const formattedScore = (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М';
                 scoreDisplay.innerText = formattedScore;
@@ -116,13 +136,7 @@
             } else {
                 scoreDisplay.innerText = score;
             }
-
-            const containerRect = gameContainer.getBoundingClientRect();
-            const clickX = event.clientX - containerRect.left;
-            const clickY = event.clientY - containerRect.top;
-
-            createHeartAnimation(clickX, clickY);
-        });
+        }
 
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
