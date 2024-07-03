@@ -95,66 +95,67 @@
             <div class="score"><span id="score">0</span></div>
             <div class="heart-counter"></div>
         </div>
-        <img src="1.png" id="clickButton" alt="Кнопка" onclick="tiltButton(event)">
+        <img src="1.png" id="clickButton" alt="Кнопка">
     </div>
 
     <script>
-        function tiltButton(event) {
-            const button = event.currentTarget;
-            const rect = button.getBoundingClientRect();
-            const offsetX = event.clientX - rect.left;
-            const offsetY = event.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            // Уменьшаем делитель для более мелкого наклона біден крутой
-            const angleX = (offsetX - centerX) / 8;
-            const angleY = (offsetY - centerY) / 8;
-            
-            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
-            
-            setTimeout(() => {
-                button.style.transform = 'none';
-            }, 300); // Уменьшаем длительность анимации до 300 мс
-        }
-
         let score = 0;
 
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
 
-        clickButton.addEventListener('click', handleClick);
-        clickButton.addEventListener('touchstart', handleTouchStart);
-
-        function handleClick(event) {
+        // Общая функция для обработки событий click и touchstart
+        function handleButtonClick(event) {
             event.preventDefault();
 
-            score++;
-            updateScoreDisplay();
-
+            // Определяем координаты нажатия внутри контейнера игры
             const containerRect = gameContainer.getBoundingClientRect();
             const clickX = event.clientX - containerRect.left;
             const clickY = event.clientY - containerRect.top;
 
+            // Создаем анимацию сердечка
             createHeartAnimation(clickX, clickY);
-        }
 
-        function handleTouchStart(event) {
-            event.preventDefault();
-
-            const touch = event.touches[0];
-            const containerRect = gameContainer.getBoundingClientRect();
-            const clickX = touch.clientX - containerRect.left;
-            const clickY = touch.clientY - containerRect.top;
-
+            // Увеличиваем счетчик и обновляем его отображение
             score++;
             updateScoreDisplay();
 
-            createHeartAnimation(clickX, clickY);
+            // Вызываем функцию для наклона кнопки
+            tiltButton();
         }
 
+        // Функция для создания анимации сердечка
+        function createHeartAnimation(clickX, clickY) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = `${clickX - 20}px`;
+            heart.style.top = `${clickY - 20}px`;
+            gameContainer.appendChild(heart);
+
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+
+        // Функция для наклона кнопки
+        function tiltButton() {
+            const button = clickButton;
+            const rect = button.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const angleX = (event.clientX - rect.left - centerX) / 8;
+            const angleY = (event.clientY - rect.top - centerY) / 8;
+
+            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
+
+            setTimeout(() => {
+                button.style.transform = 'none';
+            }, 300); // Уменьшаем длительность анимации до 300 мс
+        }
+
+        // Функция для обновления отображения счета
         function updateScoreDisplay() {
             if (score >= 1000000) {
                 const formattedScore = (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М';
@@ -167,17 +168,10 @@
             }
         }
 
-        function createHeartAnimation(clickX, clickY) {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`;
-            heart.style.top = `${clickY - 20}px`;
-            gameContainer.appendChild(heart);
+        // Добавляем обработчики событий
+        clickButton.addEventListener('click', handleButtonClick);
+        clickButton.addEventListener('touchstart', handleButtonClick);
 
-            heart.addEventListener('animationend', () => {
-                heart.remove();
-            });
-        }
     </script>
 </body>
 </html>
