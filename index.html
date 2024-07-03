@@ -137,8 +137,8 @@
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`;
-            heart.style.top = `${clickY - 20}px`;
+            heart.style.left = ${clickX - 20}px;
+            heart.style.top = ${clickY - 20}px;
             gameContainer.appendChild(heart);
 
             heart.addEventListener('animationend', () => {
@@ -166,7 +166,7 @@
             const angleX = (clientX - buttonRect.left - centerX) / 8;
             const angleY = (clientY - buttonRect.top - centerY) / 8;
 
-            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
+            button.style.transform = perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg);
 
             setTimeout(() => {
                 button.style.transform = 'none';
