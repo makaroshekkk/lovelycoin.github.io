@@ -22,8 +22,8 @@
         }
 
         .game-container img {
-            width: 325px; /* Вернул ширину кнопки к исходному размеру */
-            height: 325px; /* Вернул высоту кнопки к исходному размеру */
+            width: 325px;
+            height: 325px;
             cursor: pointer;
             border: none;
             outline: none;
@@ -54,7 +54,7 @@
         .heart-counter {
             width: 40px;
             height: 40px;
-            margin-left: 5px; /* Расстояние от счетчика */
+            margin-left: 5px;
             background-image: url('heart_counter.png');
             background-size: cover;
         }
@@ -88,19 +88,13 @@
         }
 
         .energy-counter img, .boost-counter img {
-            width: 28px; /* Увеличил размер изображений */
-            height: 28px; /* Увеличил размер изображений */
+            width: 28px;
+            height: 28px;
             margin-right: 5px;
         }
 
-        .boost-counter img {
-            margin-right: 0; /* Убираем отступ справа от картинки */
-            margin-left: 5px; /* Добавляем отступ слева от картинки */
-        }
-
-        .boost-counter::before {
-            content: "Boost"; /* Добавил текстовую надпись */
-            margin-right: 5px; /* Добавил отступ справа от текста */
+        .boost-counter {
+            flex-direction: row-reverse; /* Сначала картинка, потом текст */
         }
 
         @keyframes fly {
@@ -136,7 +130,7 @@
                 <img src="energy.png" alt="Энергия"> <span id="energy">1000</span>/1000
             </div>
             <div class="boost-counter">
-                <img src="boost.png" alt="Boost"> 
+                <img src="boost.png" alt="Boost"> <span>Boost</span>
             </div>
         </div>
     </div>
@@ -195,7 +189,7 @@
 
             tiltButton(event, buttonRect);
             decreaseEnergy();
-            updateAnotherCounter(score); // Пример увеличения другого счетчика (замените на свою логику)
+            updateAnotherCounter(score);
         }
 
         function createHeartAnimation(clickX, clickY) {
@@ -248,5 +242,3 @@
     </script>
 </body>
 </html>
-
-
