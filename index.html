@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -217,19 +217,6 @@
             scoreDisplay.innerText = formattedScore;
         }
 
-        function decreaseEnergy() {
-            // No longer needed in handleButtonClick
-        }
-
-        function increaseEnergy() {
-            if (currentEnergy >= (1 + multitapLevel)) {
-                currentEnergy -= (1 + multitapLevel);
-                currentEnergyDisplay.textContent = currentEnergy;
-            }
-        }
-
-        setInterval(increaseEnergy, 1000);
-
         function handleButtonClick(event) {
             event.preventDefault();
 
@@ -251,6 +238,10 @@
             updateScoreDisplay();
 
             tiltButton(event, buttonRect);
+
+            // Увеличение энергии на количество монеток, полученных за нажатие
+            updateEnergy(-(1 + multitapLevel));
+
             updateAnotherCounter(score);
         }
 
@@ -333,6 +324,13 @@
         function updateAnotherCounter(score) {
             document.getElementById('score').innerText = score;
         }
+
+        setInterval(() => {
+            if (currentEnergy < maxEnergy) {
+                currentEnergy++;
+                currentEnergyDisplay.textContent = currentEnergy;
+            }
+        }, 1000);
     </script>
 </body>
 </html>
