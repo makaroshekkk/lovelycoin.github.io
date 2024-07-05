@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -99,7 +99,6 @@
     </div>
 
     <script>
-        // Функция для открытия игры на весь экран
         function expandGame() {
             if (window.Telegram.WebApp) {
                 window.Telegram.WebApp.expand();
@@ -108,10 +107,11 @@
             }
         }
 
-        window.onload = function() {
-            // Ожидаем, пока Telegram Web App API будет доступен
-            setTimeout(expandGame, 100);
-        };
+        // Вызов функции расширения сразу при загрузке
+        expandGame();
+
+        // Повторный вызов функции расширения через 100 миллисекунд
+        setTimeout(expandGame, 100);
 
         let score = 0;
 
@@ -119,11 +119,9 @@
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
 
-        // Общая функция для обработки событий click и touchstart
         function handleButtonClick(event) {
             event.preventDefault();
 
-            // Определяем координаты касания внутри кнопки
             const buttonRect = clickButton.getBoundingClientRect();
             let clickX, clickY;
 
@@ -136,18 +134,14 @@
                 clickY = touch.clientY - buttonRect.top;
             }
 
-            // Создаем анимацию сердечка
             createHeartAnimation(clickX, clickY);
 
-            // Увеличиваем счетчик и обновляем его отображение
             score++;
             updateScoreDisplay();
 
-            // Вызываем функцию для наклона кнопки
             tiltButton(event, buttonRect);
         }
 
-        // Функция для создания анимации сердечка
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
@@ -160,7 +154,6 @@
             });
         }
 
-        // Функция для наклона кнопки
         function tiltButton(event, buttonRect) {
             const button = clickButton;
             const centerX = buttonRect.width / 2;
@@ -184,10 +177,9 @@
 
             setTimeout(() => {
                 button.style.transform = 'none';
-            }, 300); // Уменьшаем длительность анимации до 300 мс
+            }, 300);
         }
 
-        // Функция для обновления отображения счета
         function updateScoreDisplay() {
             const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
                 : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
@@ -195,10 +187,10 @@
             scoreDisplay.innerText = formattedScore;
         }
 
-        // Добавляем обработчики событий
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
 
     </script>
 </body>
 </html>
+
