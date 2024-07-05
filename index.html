@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,7 +90,7 @@
     </style>
 </head>
 <body>
-    <div class="game-container">
+    <div class="game-container" id="game-container">
         <div class="score-wrapper">
             <div class="score"><span id="score">0</span></div>
             <div class="heart-counter"></div>
@@ -100,10 +100,16 @@
 
     <script>
         let score = 0;
+        let isExpanded = true; // Set isExpanded to true if your game should start in expanded mode
 
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
         const gameContainer = document.querySelector('.game-container');
+
+        if (isExpanded) {
+            const gameContainerElement = document.getElementById('game-container');
+            gameContainerElement.style.height = '100vh'; // Set game container to full height
+        }
 
         // Общая функция для обработки событий click и touchstart
         function handleButtonClick(event) {
@@ -188,3 +194,4 @@
     </script>
 </body>
 </html>
+
