@@ -54,7 +54,7 @@
         .heart-counter {
             width: 40px;
             height: 40px;
-            margin-left: 5px; /* Расстояние от счетчика */
+            margin-left: 5px;
             background-image: url('heart_counter.png');
             background-size: cover;
         }
@@ -66,6 +66,20 @@
             background-image: url('heart.png');
             background-size: cover;
             animation: fly 1s linear;
+        }
+
+        .energy-wrapper {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .energy {
+            font-size: 16px;
+            color: #555;
         }
 
         @keyframes fly {
@@ -98,39 +112,48 @@
         <img src="1.png" id="clickButton" alt="Кнопка">
     </div>
 
+    <div class="energy-wrapper">
+        <div class="energy" id="energy">1000 / 1000</div>
+    </div>
+
     <script>
         let score = 0;
-
+        let energy = 1000;
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
+        const energyDisplay = document.getElementById('energy');
         const gameContainer = document.querySelector('.game-container');
 
         // Общая функция для обработки событий click и touchstart
         function handleButtonClick(event) {
             event.preventDefault();
 
-            // Определяем координаты касания внутри кнопки
-            const buttonRect = clickButton.getBoundingClientRect();
-            let clickX, clickY;
+            if (energy > 0) {
+                decreaseEnergy();
 
-            if (event.type === 'click') {
-                clickX = event.clientX - buttonRect.left;
-                clickY = event.clientY - buttonRect.top;
-            } else if (event.type === 'touchstart') {
-                const touch = event.touches[0];
-                clickX = touch.clientX - buttonRect.left;
-                clickY = touch.clientY - buttonRect.top;
+                // Определяем координаты касания внутри кнопки
+                const buttonRect = clickButton.getBoundingClientRect();
+                let clickX, clickY;
+
+                if (event.type === 'click') {
+                    clickX = event.clientX - buttonRect.left;
+                    clickY = event.clientY - buttonRect.top;
+                } else if (event.type === 'touchstart') {
+                    const touch = event.touches[0];
+                    clickX = touch.clientX - buttonRect.left;
+                    clickY = touch.clientY - buttonRect.top;
+                }
+
+                // Создаем анимацию сердечка
+                createHeartAnimation(clickX, clickY);
+
+                // Увеличиваем счетчик и обновляем его отображение
+                score++;
+                updateScoreDisplay();
+
+                // Вызываем функцию для наклона кнопки
+                tiltButton(event, buttonRect);
             }
-
-            // Создаем анимацию сердечка
-            createHeartAnimation(clickX, clickY);
-
-            // Увеличиваем счетчик и обновляем его отображение
-            score++;
-            updateScoreDisplay();
-
-            // Вызываем функцию для наклона кнопки
-            tiltButton(event, buttonRect);
         }
 
         // Функция для создания анимации сердечка
@@ -181,6 +204,27 @@
             scoreDisplay.innerText = formattedScore;
         }
 
+        // Функция для уменьшения энергии
+        function decreaseEnergy() {
+            if (energy > 0) {
+                energy--;
+                updateEnergyDisplay();
+            }
+        }
+
+        // Функция для обновления отображения энергии
+        function updateEnergyDisplay() {
+            energyDisplay.innerText = `${energy} / 1000`;
+        }
+
+        // Восстанавливаем энергию каждую секунду
+        setInterval(() => {
+            if (energy < 1000) {
+                energy++;
+                updateEnergyDisplay();
+            }
+        }, 1000);
+
         // Добавляем обработчики событий
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
@@ -188,3 +232,4 @@
     </script>
 </body>
 </html>
+
