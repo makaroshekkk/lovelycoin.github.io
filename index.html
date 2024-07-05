@@ -18,7 +18,21 @@
         .game-container {
             text-align: center;
             position: relative;
-            margin-top: 20px;
+            display: none; /* Изначально скрыто */
+        }
+
+        .loading-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background-color: #ffe6e6;
+        }
+
+        .loading-text {
+            font-size: 24px;
+            color: #a80040;
         }
 
         .game-container img {
@@ -90,6 +104,9 @@
     </style>
 </head>
 <body>
+    <div class="loading-screen">
+        <div class="loading-text">Загрузка...</div>
+    </div>
     <div class="game-container">
         <div class="score-wrapper">
             <div class="score"><span id="score">0</span></div>
@@ -107,11 +124,15 @@
             }
         }
 
-        // Вызов функции расширения сразу при загрузке
-        expandGame();
-
-        // Повторный вызов функции расширения через 100 миллисекунд
-        setTimeout(expandGame, 1000);
+        window.onload = function() {
+            setTimeout(function() {
+                // Попытка расширения окна игры на весь экран
+                expandGame();
+                // Скрытие загрузочного экрана и отображение игрового контейнера
+                document.querySelector('.loading-screen').style.display = 'none';
+                document.querySelector('.game-container').style.display = 'block';
+            }, 1000); // Увеличиваем время задержки до 1 секунды для полной загрузки
+        };
 
         let score = 0;
 
@@ -189,7 +210,6 @@
 
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
-
     </script>
 </body>
 </html>
