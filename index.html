@@ -94,11 +94,11 @@
         }
 
         .boost-counter img {
-            margin-right: 3px; /* Уменьшаем отступ справа */
+            margin-right: 3px;
         }
 
         .boost-counter span {
-            margin-left: 3px; /* Уменьшаем отступ слева */
+            margin-left: 3px;
         }
 
         .boost-menu {
@@ -160,7 +160,7 @@
         </div>
         <img src="1.png" id="clickButton" alt="Кнопка">
         <div class="counters">
-            <div class="energy-counter" id="energyDisplay">
+            <div class="energy-counter">
                 <img src="energy.png" alt="Энергия"> <span id="currentEnergy">1000</span>/<span id="maxEnergy">1000</span>
             </div>
             <div class="boost-counter" id="boostButton">
@@ -179,7 +179,7 @@
 
     <script>
         let score = 0;
-        let energy = 1000;
+        let currentEnergy = 1000;
         let maxEnergy = 1000;
         let multitapLevel = 0;
         let energyLimitLevel = 0;
@@ -198,14 +198,23 @@
         const gameContainer = document.querySelector('.game-container');
 
         function updateEnergy(amount) {
-            energy += amount;
-            const currentMaxEnergy = 1000 + energyLimitLevel * 500;
-            if (energy > currentMaxEnergy) {
-                energy = currentMaxEnergy;
-            } else if (energy < 0) {
-                energy = 0;
+            currentEnergy += amount;
+            const newMaxEnergy = 1000 + energyLimitLevel * 500;
+            maxEnergy = newMaxEnergy;
+            if (currentEnergy > maxEnergy) {
+                currentEnergy = maxEnergy;
+            } else if (currentEnergy < 0) {
+                currentEnergy = 0;
             }
-            currentEnergyDisplay.textContent = energy;
+            currentEnergyDisplay.textContent = currentEnergy;
+            maxEnergyDisplay.textContent = maxEnergy;
+        }
+
+        function updateScoreDisplay() {
+            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
+                : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
+                : score;
+            scoreDisplay.innerText = formattedScore;
         }
 
         function decreaseEnergy() {
@@ -213,9 +222,9 @@
         }
 
         function increaseEnergy() {
-            if (energy < 1000 + energyLimitLevel * 500) {
-                energy++;
-                currentEnergyDisplay.textContent = energy;
+            if (currentEnergy < maxEnergy) {
+                currentEnergy++;
+                currentEnergyDisplay.textContent = currentEnergy;
             }
         }
 
@@ -284,13 +293,6 @@
             }, 300);
         }
 
-        function updateScoreDisplay() {
-            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
-                : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
-                : score;
-            scoreDisplay.innerText = formattedScore;
-        }
-
         function toggleBoostMenu() {
             if (boostMenu.style.display === 'none' || boostMenu.style.display === '') {
                 boostMenu.style.display = 'block';
@@ -299,44 +301,40 @@
             }
         }
 
-        function buyMultitap() {
+        function closeBoostMenuHandler() {
+            boostMenu.style.display = 'none';
+        }
+
+        function buyMultitapHandler() {
             if (score >= multitapCost) {
                 score -= multitapCost;
                 multitapLevel++;
                 multitapCost *= 2;
                 updateScoreDisplay();
-                multitapLevelDisplay.textContent = `Multitap Level: ${multitapLevel}`;
-            } else {
-                alert('Недостаточно монет для покупки Мультитапа.');
             }
         }
 
-        function buyEnergyLimit() {
-            const currentEnergyLimit = 1000 + energyLimitLevel * 500;
-            const nextEnergyLimit = 1000 + (energyLimitLevel + 1) * 500;
-            
+        function buyEnergyLimitHandler() {
             if (score >= energyLimitCost) {
                 score -= energyLimitCost;
                 energyLimitLevel++;
                 energyLimitCost *= 2;
+                updateEnergy(0); // Update energy display after buying energy limit
                 updateScoreDisplay();
-                energyLimitLevelDisplay.textContent = `Energy Limit Level: ${energyLimitLevel}`;
-                maxEnergyDisplay.textContent = nextEnergyLimit;
-                if (energy > currentEnergyLimit) {
-                    energy = currentEnergyLimit; // сохраняем текущее значение энергии
-                }
-                currentEnergyDisplay.textContent = energy;
-            } else {
-                alert('Недостаточно монет для покупки лимита энергии.');
             }
         }
 
-        document.getElementById('buyMultitap').addEventListener('click', buyMultitap);
-        document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimit);
-        boostButton.addEventListener('click', toggleBoostMenu);
-        closeBoostMenu.addEventListener('click', toggleBoostMenu);
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
+        boostButton.addEventListener('click', toggleBoostMenu);
+        closeBoostMenu.addEventListener('click', closeBoostMenuHandler);
+        document.getElementById('buyMultitap').addEventListener('click', buyMultitapHandler);
+        document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimitHandler);
+
+        function updateAnotherCounter(score) {
+            document.getElementById('score').innerText = score;
+        }
     </script>
 </body>
 </html>
+
