@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin</title>
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -208,6 +208,11 @@
             }
             currentEnergyDisplay.textContent = currentEnergy;
             maxEnergyDisplay.textContent = maxEnergy;
+
+            // Проверка на нулевую энергию
+            if (currentEnergy <= 0) {
+                clearInterval(energyInterval);
+            }
         }
 
         function updateScoreDisplay() {
@@ -215,6 +220,10 @@
                 : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
                 : score;
             scoreDisplay.innerText = formattedScore;
+        }
+
+        function decreaseEnergy(amount) {
+            updateEnergy(-amount);
         }
 
         function handleButtonClick(event) {
@@ -238,10 +247,7 @@
             updateScoreDisplay();
 
             tiltButton(event, buttonRect);
-
-            // Увеличение энергии на количество монеток, полученных за нажатие
-            updateEnergy(-(1 + multitapLevel));
-
+            decreaseEnergy(1 + multitapLevel);
             updateAnotherCounter(score);
         }
 
@@ -321,16 +327,21 @@
         document.getElementById('buyMultitap').addEventListener('click', buyMultitapHandler);
         document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimitHandler);
 
-        function updateAnotherCounter(score) {
-            document.getElementById('score').innerText = score;
-        }
-
-        setInterval(() => {
+        // Интервал для автоматического увеличения энергии
+        let energyInterval = setInterval(function() {
             if (currentEnergy < maxEnergy) {
                 currentEnergy++;
                 currentEnergyDisplay.textContent = currentEnergy;
             }
+            // Проверка на нулевую энергию
+            if (currentEnergy <= 0) {
+                clearInterval(energyInterval);
+            }
         }, 1000);
+
+        function updateAnotherCounter(score) {
+            document.getElementById('score').innerText = score;
+        }
     </script>
 </body>
 </html>
