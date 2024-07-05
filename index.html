@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin</title>
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -160,8 +160,8 @@
         </div>
         <img src="1.png" id="clickButton" alt="Кнопка">
         <div class="counters">
-            <div class="energy-counter">
-                <img src="energy.png" alt="Энергия"> <span id="energy">1000</span>/1000
+            <div class="energy-counter" id="energyDisplay">
+                <img src="energy.png" alt="Энергия"> <span id="currentEnergy">1000</span>/<span id="maxEnergy">1000</span>
             </div>
             <div class="boost-counter" id="boostButton">
                 <img src="boost.png" alt="Boost">
@@ -180,13 +180,15 @@
     <script>
         let score = 0;
         let energy = 1000;
+        let maxEnergy = 1000;
         let multitapLevel = 0;
         let energyLimitLevel = 0;
         let multitapCost = 500;
         let energyLimitCost = 500;
 
         const scoreDisplay = document.getElementById('score');
-        const energyDisplay = document.getElementById('energy');
+        const currentEnergyDisplay = document.getElementById('currentEnergy');
+        const maxEnergyDisplay = document.getElementById('maxEnergy');
         const multitapLevelDisplay = document.getElementById('multitapLevel');
         const energyLimitLevelDisplay = document.getElementById('energyLimitLevel');
         const boostButton = document.getElementById('boostButton');
@@ -197,17 +199,13 @@
 
         function updateEnergy(amount) {
             energy += amount;
-            const maxEnergy = 1000 + energyLimitLevel * 500;
-            if (energy > maxEnergy) {
-                energy = maxEnergy;
+            const currentMaxEnergy = 1000 + energyLimitLevel * 500;
+            if (energy > currentMaxEnergy) {
+                energy = currentMaxEnergy;
             } else if (energy < 0) {
                 energy = 0;
             }
-            energyDisplay.textContent = `${energy}/${maxEnergy}`;
-        }
-
-        function updateAnotherCounter(amount) {
-            // Для других счетчиков (если требуется)
+            currentEnergyDisplay.textContent = energy;
         }
 
         function decreaseEnergy() {
@@ -217,7 +215,7 @@
         function increaseEnergy() {
             if (energy < 1000 + energyLimitLevel * 500) {
                 energy++;
-                energyDisplay.textContent = `${energy}/${1000 + energyLimitLevel * 500}`;
+                currentEnergyDisplay.textContent = energy;
             }
         }
 
@@ -321,10 +319,13 @@
                 score -= energyLimitCost;
                 energyLimitLevel++;
                 energyLimitCost *= 2;
-                energy = nextEnergyLimit; // Обновляем переменную energy
                 updateScoreDisplay();
                 energyLimitLevelDisplay.textContent = `Energy Limit Level: ${energyLimitLevel}`;
-                energyDisplay.textContent = `${energy}/${nextEnergyLimit}`;
+                maxEnergyDisplay.textContent = nextEnergyLimit;
+                if (energy > currentEnergyLimit) {
+                    energy = currentEnergyLimit; // сохраняем текущее значение энергии
+                }
+                currentEnergyDisplay.textContent = energy;
             } else {
                 alert('Недостаточно монет для покупки лимита энергии.');
             }
@@ -339,3 +340,4 @@
     </script>
 </body>
 </html>
+
