@@ -93,9 +93,14 @@
             margin-right: 5px;
         }
 
+        .boost-counter img {
+            margin-right: 0; /* Убираем отступ справа от картинки */
+            margin-left: 5px; /* Добавляем отступ слева от картинки */
+        }
+
         .boost-counter::before {
             content: "Boost"; /* Добавил текстовую надпись */
-            margin-left: 5px;
+            margin-right: 5px; /* Добавил отступ справа от текста */
         }
 
         @keyframes fly {
@@ -243,4 +248,5 @@
     </script>
 </body>
 </html>
+
 
