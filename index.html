@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,8 +22,9 @@
         }
 
         .game-container img {
-            width: 325px;
-            height: 325px;
+            width: 80vw; /* Адаптировать размер кнопки для мобильных устройств */
+            max-width: 325px; /* Максимальная ширина для изображения */
+            height: auto; /* Автоматическая высота для сохранения пропорций */
             cursor: pointer;
             border: none;
             outline: none;
@@ -39,30 +40,47 @@
 
         .score-wrapper {
             position: absolute;
-            top: -50px;
+            top: 10px; /* Поднять счетчик, чтобы не перекрывало кнопку на маленьких экранах */
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
+            z-index: 1; /* Убедиться, что находится поверх кнопки */
         }
 
         .score {
-            font-size: 36px;
+            font-size: 24px; /* Уменьшить размер шрифта для мобильных устройств */
             color: #a80040;
+            margin-right: 5px; /* Небольшие отступы для читаемости */
         }
 
         .heart-counter {
-            width: 40px;
-            height: 40px;
-            margin-left: 5px; /* Расстояние от счетчика */
+            width: 30px; /* Уменьшить размер счетчика сердец */
+            height: 30px;
+            margin-left: 5px;
             background-image: url('heart_counter.png');
             background-size: cover;
         }
 
+        .energy-wrapper {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1; /* Убедиться, что находится поверх кнопки */
+        }
+
+        .energy {
+            font-size: 14px; /* Уменьшить размер шрифта для мобильных устройств */
+            color: #555;
+        }
+
         .heart {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 30px; /* Уменьшить размер сердца */
+            height: 30px;
             background-image: url('heart.png');
             background-size: cover;
             animation: fly 1s linear;
@@ -74,7 +92,7 @@
                 opacity: 1;
             }
             100% {
-                transform: translateY(-300px);
+                transform: translateY(-200px); /* Уменьшить высоту полета сердца */
                 opacity: 0;
             }
         }
@@ -98,47 +116,56 @@
         <img src="1.png" id="clickButton" alt="Кнопка">
     </div>
 
+    <div class="energy-wrapper">
+        <div class="energy" id="energy">1000 / 1000</div>
+    </div>
+
     <script>
         let score = 0;
-
+        let energy = 1000;
         const clickButton = document.getElementById('clickButton');
         const scoreDisplay = document.getElementById('score');
+        const energyDisplay = document.getElementById('energy');
         const gameContainer = document.querySelector('.game-container');
 
         // Общая функция для обработки событий click и touchstart
         function handleButtonClick(event) {
             event.preventDefault();
 
-            // Определяем координаты касания внутри кнопки
-            const buttonRect = clickButton.getBoundingClientRect();
-            let clickX, clickY;
+            if (energy > 0) {
+                decreaseEnergy();
 
-            if (event.type === 'click') {
-                clickX = event.clientX - buttonRect.left;
-                clickY = event.clientY - buttonRect.top;
-            } else if (event.type === 'touchstart') {
-                const touch = event.touches[0];
-                clickX = touch.clientX - buttonRect.left;
-                clickY = touch.clientY - buttonRect.top;
+                // Определяем координаты касания внутри кнопки
+                const buttonRect = clickButton.getBoundingClientRect();
+                let clickX, clickY;
+
+                if (event.type === 'click') {
+                    clickX = event.clientX - buttonRect.left;
+                    clickY = event.clientY - buttonRect.top;
+                } else if (event.type === 'touchstart') {
+                    const touch = event.touches[0];
+                    clickX = touch.clientX - buttonRect.left;
+                    clickY = touch.clientY - buttonRect.top;
+                }
+
+                // Создаем анимацию сердечка
+                createHeartAnimation(clickX, clickY);
+
+                // Увеличиваем счетчик и обновляем его отображение
+                score++;
+                updateScoreDisplay();
+
+                // Вызываем функцию для наклона кнопки
+                tiltButton(event, buttonRect);
             }
-
-            // Создаем анимацию сердечка
-            createHeartAnimation(clickX, clickY);
-
-            // Увеличиваем счетчик и обновляем его отображение
-            score++;
-            updateScoreDisplay();
-
-            // Вызываем функцию для наклона кнопки
-            tiltButton(event, buttonRect);
         }
 
         // Функция для создания анимации сердечка
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`;
-            heart.style.top = `${clickY - 20}px`;
+            heart.style.left = `${clickX - 15}px`; // Адаптировать положение сердца для мобильных устройств
+            heart.style.top = `${clickY - 15}px`;
             gameContainer.appendChild(heart);
 
             heart.addEventListener('animationend', () => {
@@ -173,6 +200,14 @@
             }, 300); // Уменьшаем длительность анимации до 300 мс
         }
 
+        // Функция для уменьшения энергии
+        function decreaseEnergy() {
+            if (energy > 0) {
+                energy--;
+                updateEnergyDisplay();
+            }
+        }
+
         // Функция для обновления отображения счета
         function updateScoreDisplay() {
             const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
@@ -180,6 +215,19 @@
                 : score;
             scoreDisplay.innerText = formattedScore;
         }
+
+        // Функция для обновления отображения энергии
+        function updateEnergyDisplay() {
+            energyDisplay.innerText = `${energy} / 1000`;
+        }
+
+        // Восстанавливаем энергию каждую секунду
+        setInterval(() => {
+            if (energy < 1000) {
+                energy++;
+                updateEnergyDisplay();
+            }
+        }, 1000);
 
         // Добавляем обработчики событий
         clickButton.addEventListener('click', handleButtonClick);
