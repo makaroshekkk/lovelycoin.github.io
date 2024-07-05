@@ -68,20 +68,26 @@
             animation: fly 1s linear;
         }
 
-        .energy-counter {
+        .counters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 10px;
+        }
+
+        .energy-counter, .another-counter {
             font-size: 18px;
-            color: #a80040; /* Цвет текста, соответствующий цвету счетчика */
+            color: #a80040;
             font-weight: bold;
             display: inline-flex;
             align-items: center;
-            padding: 5px 10px; /* Добавляем отступы вокруг текста */
-            border: 2px solid #f2c6c6; /* Рамка */
-            background-color: #f2c6c6; /* Фон */
-            border-radius: 15px; /* Закругленные углы рамки */
+            padding: 5px 10px;
+            border: 2px solid #f2c6c6;
+            background-color: #f2c6c6;
+            border-radius: 15px;
         }
 
-        .energy-counter img {
+        .energy-counter img, .another-counter img {
             width: 18px;
             height: 18px;
             margin-right: 5px;
@@ -115,7 +121,14 @@
             <div class="heart-counter"></div>
         </div>
         <img src="1.png" id="clickButton" alt="Кнопка">
-        <div class="energy-counter"><img src="energy.png" alt="Энергия"> <span id="energy">1000</span>/1000</div>
+        <div class="counters">
+            <div class="energy-counter">
+                <img src="energy.png" alt="Энергия"> <span id="energy">1000</span>/1000
+            </div>
+            <div class="another-counter">
+                <img src="another_icon.png" alt="Другой счетчик"> <span id="another">0</span>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -123,6 +136,7 @@
         let energy = 1000;
         const scoreDisplay = document.getElementById('score');
         const energyDisplay = document.getElementById('energy');
+        const anotherDisplay = document.getElementById('another');
         const gameContainer = document.querySelector('.game-container');
 
         function updateEnergy(amount) {
@@ -133,6 +147,10 @@
                 energy = 0;
             }
             energyDisplay.textContent = energy;
+        }
+
+        function updateAnotherCounter(amount) {
+            anotherDisplay.textContent = amount;
         }
 
         function decreaseEnergy() {
@@ -167,6 +185,7 @@
 
             tiltButton(event, buttonRect);
             decreaseEnergy();
+            updateAnotherCounter(score); // Пример увеличения другого счетчика (замените на свою логику)
         }
 
         function createHeartAnimation(clickX, clickY) {
