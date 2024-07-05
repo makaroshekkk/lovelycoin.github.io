@@ -75,7 +75,7 @@
             margin-top: 10px;
         }
 
-        .energy-counter, .another-counter {
+        .energy-counter, .boost-counter {
             font-size: 18px;
             color: #a80040;
             font-weight: bold;
@@ -87,33 +87,15 @@
             border-radius: 15px;
         }
 
-        .energy-counter img, .another-counter img {
+        .energy-counter img, .boost-counter img {
             width: 28px; /* Увеличил размер изображений */
             height: 28px; /* Увеличил размер изображений */
             margin-right: 5px;
         }
 
-        .boost-counter {
-            font-size: 18px;
-            color: #a80040;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 10px;
-            border: 2px solid #f2c6c6;
-            background-color: #f2c6c6;
-            border-radius: 15px;
-        }
-
-        .boost-counter img {
-            width: 28px; /* Увеличил размер изображения */
-            height: 28px; /* Увеличил размер изображения */
-            margin-right: 5px;
-        }
-
         .boost-counter::before {
             content: "Boost"; /* Добавил текстовую надпись */
-            margin-right: 5px;
+            margin-left: 5px;
         }
 
         @keyframes fly {
@@ -149,7 +131,7 @@
                 <img src="energy.png" alt="Энергия"> <span id="energy">1000</span>/1000
             </div>
             <div class="boost-counter">
-                <img src="boost.png" alt="Другой счетчик"> <span id="another">0</span>
+                <img src="boost.png" alt="Boost"> 
             </div>
         </div>
     </div>
@@ -261,3 +243,4 @@
     </script>
 </body>
 </html>
+
