@@ -22,8 +22,9 @@
         }
 
         .game-container img {
-            width: 325px;
-            height: 325px;
+            width: 20px; /* Adjusted width to match the text size */
+            height: auto; /* Automatically adjust height based on width */
+            vertical-align: middle; /* Align image vertically with text */
             cursor: pointer;
             border: none;
             outline: none;
@@ -103,7 +104,7 @@
             <div class="heart-counter"></div>
         </div>
         <img src="1.png" id="clickButton" alt="Кнопка">
-        <div class="energy-counter"><img src="energy.png" style="vertical-align: middle;"> <span id="energy">1000</span>/1000</div>
+        <div class="energy-counter"><img src="energy.png" alt="Energy" style="width: 18px; height: 18px; vertical-align: middle;"> <span id="energy">1000</span>/1000</div>
     </div>
 
     <script>
