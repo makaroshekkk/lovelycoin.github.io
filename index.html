@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -203,7 +203,7 @@
             } else if (energy < 0) {
                 energy = 0;
             }
-            energyDisplay.textContent = energy;
+            energyDisplay.textContent = `${energy}/${maxEnergy}`;
         }
 
         function updateAnotherCounter(amount) {
@@ -217,7 +217,7 @@
         function increaseEnergy() {
             if (energy < 1000 + energyLimitLevel * 500) {
                 energy++;
-                energyDisplay.textContent = energy;
+                energyDisplay.textContent = `${energy}/${1000 + energyLimitLevel * 500}`;
             }
         }
 
@@ -317,20 +317,14 @@
             const currentEnergyLimit = 1000 + energyLimitLevel * 500;
             const nextEnergyLimit = 1000 + (energyLimitLevel + 1) * 500;
             
-            if (score >= energyLimitCost && energyLimitLevel === 0) {
+            if (score >= energyLimitCost) {
                 score -= energyLimitCost;
                 energyLimitLevel++;
                 energyLimitCost *= 2;
+                energy = nextEnergyLimit; // Обновляем переменную energy
                 updateScoreDisplay();
                 energyLimitLevelDisplay.textContent = `Energy Limit Level: ${energyLimitLevel}`;
-                energyDisplay.textContent = nextEnergyLimit;
-            } else if (score >= energyLimitCost && energyLimitLevel > 0) {
-                score -= energyLimitCost;
-                energyLimitLevel++;
-                energyLimitCost *= 2;
-                updateScoreDisplay();
-                energyLimitLevelDisplay.textContent = `Energy Limit Level: ${energyLimitLevel}`;
-                energyDisplay.textContent = nextEnergyLimit;
+                energyDisplay.textContent = `${energy}/${nextEnergyLimit}`;
             } else {
                 alert('Недостаточно монет для покупки лимита энергии.');
             }
