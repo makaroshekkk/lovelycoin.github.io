@@ -301,11 +301,6 @@
             }
         }
 
-        boostButton.addEventListener('click', toggleBoostMenu);
-        closeBoostMenu.addEventListener('click', toggleBoostMenu);
-        clickButton.addEventListener('click', handleButtonClick);
-        clickButton.addEventListener('touchstart', handleButtonClick);
-
         function buyMultitap() {
             if (score >= multitapCost) {
                 score -= multitapCost;
@@ -343,6 +338,10 @@
 
         document.getElementById('buyMultitap').addEventListener('click', buyMultitap);
         document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimit);
+        boostButton.addEventListener('click', toggleBoostMenu);
+        closeBoostMenu.addEventListener('click', toggleBoostMenu);
+        clickButton.addEventListener('click', handleButtonClick);
+        clickButton.addEventListener('touchstart', handleButtonClick);
     </script>
 </body>
 </html>
