@@ -185,6 +185,11 @@
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
 
+        // Добавляем растяжение на полный экран в tg.ready()
+        tg.ready(() => {
+            tg.expand(); // Растягиваем окно на всю высоту приложения
+        });
+
     </script>
 </body>
 </html>
