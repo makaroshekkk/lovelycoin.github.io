@@ -185,13 +185,6 @@
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
 
-        // При запуске Telegram Web App
-        window.addEventListener('load', () => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.expand();
-            }
-        });
     </script>
-
 </body>
 </html>
