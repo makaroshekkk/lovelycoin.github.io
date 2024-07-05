@@ -99,6 +99,20 @@
     </div>
 
     <script>
+        // Функция для открытия игры на весь экран
+        function expandGame() {
+            if (window.Telegram.WebApp) {
+                window.Telegram.WebApp.expand();
+            } else {
+                console.error("Telegram WebApp не доступен");
+            }
+        }
+
+        window.onload = function() {
+            // Ожидаем, пока Telegram Web App API будет доступен
+            setTimeout(expandGame, 100);
+        };
+
         let score = 0;
 
         const clickButton = document.getElementById('clickButton');
