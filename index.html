@@ -68,6 +68,12 @@
             animation: fly 1s linear;
         }
 
+        .energy-counter {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+
         @keyframes fly {
             0% {
                 transform: translateY(0);
@@ -96,20 +102,39 @@
             <div class="heart-counter"></div>
         </div>
         <img src="1.png" id="clickButton" alt="Кнопка">
+        <div class="energy-counter"><span id="energy">1000</span>/1000</div>
     </div>
 
     <script>
         let score = 0;
-
-        const clickButton = document.getElementById('clickButton');
+        let energy = 1000;
         const scoreDisplay = document.getElementById('score');
+        const energyDisplay = document.getElementById('energy');
         const gameContainer = document.querySelector('.game-container');
 
-        // Общая функция для обработки событий click и touchstart
+        function updateEnergy(amount) {
+            energy += amount;
+            if (energy > 1000) {
+                energy = 1000;
+            } else if (energy < 0) {
+                energy = 0;
+            }
+            energyDisplay.textContent = energy;
+        }
+
+        function decreaseEnergy() {
+            updateEnergy(-1);
+        }
+
+        function increaseEnergy() {
+            updateEnergy(1);
+        }
+
+        setInterval(increaseEnergy, 1000);
+
         function handleButtonClick(event) {
             event.preventDefault();
 
-            // Определяем координаты касания внутри кнопки
             const buttonRect = clickButton.getBoundingClientRect();
             let clickX, clickY;
 
@@ -122,18 +147,15 @@
                 clickY = touch.clientY - buttonRect.top;
             }
 
-            // Создаем анимацию сердечка
             createHeartAnimation(clickX, clickY);
 
-            // Увеличиваем счетчик и обновляем его отображение
             score++;
             updateScoreDisplay();
 
-            // Вызываем функцию для наклона кнопки
             tiltButton(event, buttonRect);
+            decreaseEnergy();
         }
 
-        // Функция для создания анимации сердечка
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
@@ -146,7 +168,6 @@
             });
         }
 
-        // Функция для наклона кнопки
         function tiltButton(event, buttonRect) {
             const button = clickButton;
             const centerX = buttonRect.width / 2;
@@ -170,10 +191,9 @@
 
             setTimeout(() => {
                 button.style.transform = 'none';
-            }, 300); // Уменьшаем длительность анимации до 300 мс
+            }, 300);
         }
 
-        // Функция для обновления отображения счета
         function updateScoreDisplay() {
             const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
                 : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
@@ -181,10 +201,8 @@
             scoreDisplay.innerText = formattedScore;
         }
 
-        // Добавляем обработчики событий
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
-
     </script>
 </body>
 </html>
