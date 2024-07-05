@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LovelyCoin</title>
     <style>
-        body {
+        body, html {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -13,17 +13,21 @@
             height: 100vh;
             margin: 0;
             background-color: #ffe6e6;
+            overflow: hidden; /* Prevent scrolling */
         }
 
         .game-container {
             text-align: center;
-            position: relative;
-            margin-top: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .game-container img {
-            width: 325px;
-            height: 325px;
+            width: 100%;
+            max-width: 325px;
+            height: auto;
             cursor: pointer;
             border: none;
             outline: none;
