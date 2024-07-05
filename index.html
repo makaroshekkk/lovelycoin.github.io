@@ -124,7 +124,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
 
         .boost-menu button:hover {
@@ -173,10 +173,8 @@
     <div class="boost-menu" id="boostMenu">
         <p>Boost Options</p>
         <button id="closeBoostMenu">Close</button>
-        <button id="buyMultitap">Buy Multitap (500 монет)</button>
-        <span id="multitapLevel">Multitap Level: 0</span>
-        <button id="buyEnergyLimit">Buy Energy Limit (500 монет)</button>
-        <span id="energyLimitLevel">Energy Limit Level: 0</span>
+        <button id="buyMultitap">Buy Multitap</button>
+        <button id="buyEnergyLimit">Buy Energy Limit</button>
     </div>
 
     <script>
@@ -199,8 +197,9 @@
 
         function updateEnergy(amount) {
             energy += amount;
-            if (energy > 1000 + energyLimitLevel * 500) {
-                energy = 1000 + energyLimitLevel * 500;
+            const maxEnergy = 1000 + energyLimitLevel * 500;
+            if (energy > maxEnergy) {
+                energy = maxEnergy;
             } else if (energy < 0) {
                 energy = 0;
             }
@@ -241,7 +240,7 @@
 
             createHeartAnimation(clickX, clickY);
 
-            score++;
+            score += 1 + multitapLevel;
             updateScoreDisplay();
 
             tiltButton(event, buttonRect);
@@ -315,19 +314,30 @@
                 updateScoreDisplay();
                 multitapLevelDisplay.textContent = `Multitap Level: ${multitapLevel}`;
             } else {
-                alert('Not enough coins to buy Multitap.');
+                alert('Недостаточно монет для покупки Мультитапа.');
             }
         }
 
         function buyEnergyLimit() {
-            if (score >= energyLimitCost) {
+            const currentEnergyLimit = 1000 + energyLimitLevel * 500;
+            const nextEnergyLimit = 1000 + (energyLimitLevel + 1) * 500;
+            
+            if (score >= energyLimitCost && energyLimitLevel === 0) {
                 score -= energyLimitCost;
                 energyLimitLevel++;
                 energyLimitCost *= 2;
                 updateScoreDisplay();
                 energyLimitLevelDisplay.textContent = `Energy Limit Level: ${energyLimitLevel}`;
+                energyDisplay.textContent = nextEnergyLimit;
+            } else if (score >= energyLimitCost && energyLimitLevel > 0) {
+                score -= energyLimitCost;
+                energyLimitLevel++;
+                energyLimitCost *= 2;
+                updateScoreDisplay();
+                energyLimitLevelDisplay.textContent = `Energy Limit Level: ${energyLimitLevel}`;
+                energyDisplay.textContent = nextEnergyLimit;
             } else {
-                alert('Not enough coins to buy Energy Limit.');
+                alert('Недостаточно монет для покупки лимита энергии.');
             }
         }
 
