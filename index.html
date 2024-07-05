@@ -71,16 +71,19 @@
         .energy-counter {
             margin-top: 10px;
             font-size: 18px;
-            color: #333;
-            font-weight: bold; /* Делаем шрифт жирным */
+            color: #a80040; /* Цвет текста, соответствующий цвету счетчика */
+            font-weight: bold;
             display: flex;
             align-items: center;
+            padding: 5px 10px; /* Добавляем отступы вокруг текста */
+            border: 2px solid #a80040; /* Рамка */
+            background-color: #ffe6e6; /* Фон */
         }
 
         .energy-counter img {
-            width: 18px; /* Размер изображения энергии соответствует размеру текста */
-            height: 18px; /* Высота изображения энергии */
-            margin-right: 5px; /* Отступ между изображением и текстом */
+            width: 18px;
+            height: 18px;
+            margin-right: 5px;
         }
 
         @keyframes fly {
@@ -215,5 +218,4 @@
     </script>
 </body>
 </html>
-
 
