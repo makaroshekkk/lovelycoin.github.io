@@ -88,17 +88,13 @@
             user-select: none;
         }
     </style>
-</head>
-<body>
-    <div class="game-container">
-        <div class="score-wrapper">
-            <div class="score"><span id="score">0</span></div>
-            <div class="heart-counter"></div>
-        </div>
-        <img src="1.png" id="clickButton" alt="Кнопка">
-    </div>
 
     <script>
+        // Добавляем растяжение на полный экран в tg.ready() для автоматического открытия на полный экран
+        tg.ready(() => {
+            tg.expand(); // Растягиваем окно на всю высоту приложения
+        });
+
         let score = 0;
 
         const clickButton = document.getElementById('clickButton');
@@ -185,11 +181,16 @@
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
 
-        // Добавляем растяжение на полный экран в tg.ready()
-        tg.ready(() => {
-            tg.expand(); // Растягиваем окно на всю высоту приложения
-        });
-
     </script>
+</head>
+<body>
+    <div class="game-container">
+        <div class="score-wrapper">
+            <div class="score"><span id="score">0</span></div>
+            <div class="heart-counter"></div>
+        </div>
+        <img src="1.png" id="clickButton" alt="Кнопка">
+    </div>
 </body>
 </html>
+
