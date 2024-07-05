@@ -22,9 +22,8 @@
         }
 
         .game-container img {
-            width: 20px; /* Adjusted width to match the text size */
-            height: auto; /* Automatically adjust height based on width */
-            vertical-align: middle; /* Align image vertically with text */
+            width: 325px; /* Вернул ширину кнопки к исходному размеру */
+            height: 325px; /* Вернул высоту кнопки к исходному размеру */
             cursor: pointer;
             border: none;
             outline: none;
@@ -73,7 +72,15 @@
             margin-top: 10px;
             font-size: 18px;
             color: #333;
-            font-weight: bold; /* Making the font bold */
+            font-weight: bold; /* Делаем шрифт жирным */
+            display: flex;
+            align-items: center;
+        }
+
+        .energy-counter img {
+            width: 18px; /* Размер изображения энергии соответствует размеру текста */
+            height: 18px; /* Высота изображения энергии */
+            margin-right: 5px; /* Отступ между изображением и текстом */
         }
 
         @keyframes fly {
@@ -104,7 +111,7 @@
             <div class="heart-counter"></div>
         </div>
         <img src="1.png" id="clickButton" alt="Кнопка">
-        <div class="energy-counter"><img src="energy.png" alt="Energy" style="width: 18px; height: 18px; vertical-align: middle;"> <span id="energy">1000</span>/1000</div>
+        <div class="energy-counter"><img src="energy.png" alt="Энергия"> <span id="energy">1000</span>/1000</div>
     </div>
 
     <script>
@@ -208,4 +215,5 @@
     </script>
 </body>
 </html>
+
 
