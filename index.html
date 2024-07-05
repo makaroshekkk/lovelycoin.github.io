@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -99,6 +99,13 @@
     </div>
 
     <script>
+        // Функция для открытия игры на весь экран
+        function expandGame() {
+            if (window.Telegram.WebApp) {
+                window.Telegram.WebApp.expand();
+            }
+        }
+
         let score = 0;
 
         const clickButton = document.getElementById('clickButton');
@@ -131,6 +138,9 @@
 
             // Вызываем функцию для наклона кнопки
             tiltButton(event, buttonRect);
+
+            // Открываем игру на весь экран
+            expandGame();
         }
 
         // Функция для создания анимации сердечка
@@ -188,3 +198,4 @@
     </script>
 </body>
 </html>
+
