@@ -218,12 +218,12 @@
         }
 
         function decreaseEnergy() {
-            updateEnergy(-1);
+            // No longer needed in handleButtonClick
         }
 
         function increaseEnergy() {
-            if (currentEnergy < maxEnergy) {
-                currentEnergy++;
+            if (currentEnergy >= (1 + multitapLevel)) {
+                currentEnergy -= (1 + multitapLevel);
                 currentEnergyDisplay.textContent = currentEnergy;
             }
         }
@@ -251,7 +251,6 @@
             updateScoreDisplay();
 
             tiltButton(event, buttonRect);
-            decreaseEnergy();
             updateAnotherCounter(score);
         }
 
@@ -337,4 +336,3 @@
     </script>
 </body>
 </html>
-
