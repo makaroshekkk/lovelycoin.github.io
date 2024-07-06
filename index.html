@@ -129,6 +129,7 @@
             font-size: 32px;
             font-weight: bold;
             margin-bottom: 10px;
+            color: #a80040; /* Цвет текста количества монет */
         }
 
         .boost-menu button {
@@ -136,7 +137,7 @@
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 10px; /* Закругленные края */
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
@@ -282,9 +283,9 @@
             heart.style.top = `${clickY - 20}px`;
             gameContainer.appendChild(heart);
 
-            heart.addEventListener('animationend', () => {
+            setTimeout(() => {
                 heart.remove();
-            });
+            }, 1000);
         }
 
         function tiltButton(event, buttonRect) {
