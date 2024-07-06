@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -108,9 +108,7 @@
             width: 100%;
             height: 100%;
             padding: 20px;
-            background-color: white;
-            border: 2px solid #a80040;
-            border-radius: 10px;
+            background-color: #ffe6e6;
             display: none;
             text-align: center;
             z-index: 1000;
@@ -177,7 +175,7 @@
     </div>
     
     <div class="boost-menu" id="boostMenu">
-        <p>Ваш баланс: <span id="boostBalance">0</span></p>
+        <p>Ваш баланс: <span id="boostBalance">0</span><img src="heart_counter.png" alt="Сердечко" style="width: 20px; height: 20px; margin-left: 5px;"></p>
         <button id="closeBoostMenu">Закрыть</button>
         <button id="buyMultitap">Купить Multitap</button>
         <button id="buyEnergyLimit">Купить Energy Limit</button>
@@ -285,7 +283,7 @@
             const angleX = (clientX - buttonRect.left - centerX) / 8;
             const angleY = (clientY - buttonRect.top - centerY) / 8;
 
-            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
+            button.style.transform = `rotateX(${angleY}deg) rotateY(${angleX}deg)`;
 
             setTimeout(() => {
                 button.style.transform = 'none';
@@ -318,7 +316,7 @@
                 score -= energyLimitCost;
                 energyLimitLevel++;
                 energyLimitCost *= 2;
-                updateEnergy(0); // Update energy display after buying energy limit
+                updateEnergy(0); // Обновление отображения энергии после покупки увеличения лимита энергии
                 updateScoreDisplay();
             }
         }
