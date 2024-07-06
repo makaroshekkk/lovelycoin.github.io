@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin</title>
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -120,6 +120,16 @@
             margin-bottom: 20px;
         }
 
+        .boost-menu .balance-text {
+            margin-bottom: 5px;
+        }
+
+        .boost-menu .balance {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
         .boost-menu button {
             background-color: #a80040;
             color: white;
@@ -133,6 +143,17 @@
 
         .boost-menu button:hover {
             background-color: #900034;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a80040;
+            background: none;
+            border: none;
         }
 
         @keyframes fly {
@@ -175,8 +196,9 @@
     </div>
     
     <div class="boost-menu" id="boostMenu">
-        <p>Ваш баланс: <span id="boostBalance">0</span><img src="heart_counter.png" alt="Сердечко" style="width: 20px; height: 20px; margin-left: 5px;"></p>
-        <button id="closeBoostMenu">Закрыть</button>
+        <button class="close-button" id="closeBoostMenu">✖</button>
+        <p class="balance-text">Ваш баланс:</p>
+        <p class="balance"><span id="boostBalance">0</span><img src="heart_counter.png" alt="Сердечко" style="width: 20px; height: 20px; margin-left: 5px;"></p>
         <button id="buyMultitap">Купить Multitap</button>
         <button id="buyEnergyLimit">Купить Energy Limit</button>
     </div>
@@ -265,37 +287,22 @@
         }
 
         function tiltButton(event, buttonRect) {
-            const button = clickButton;
+            const { clientX, clientY } = event;
             const centerX = buttonRect.width / 2;
             const centerY = buttonRect.height / 2;
-
-            let clientX, clientY;
-
-            if (event.type === 'click') {
-                clientX = event.clientX;
-                clientY = event.clientY;
-            } else if (event.type === 'touchstart') {
-                const touch = event.touches[0];
-                clientX = touch.clientX;
-                clientY = touch.clientY;
-            }
 
             const angleX = (clientX - buttonRect.left - centerX) / 8;
             const angleY = (clientY - buttonRect.top - centerY) / 8;
 
-            button.style.transform = `rotateX(${angleY}deg) rotateY(${angleX}deg)`;
+            clickButton.style.transform = `rotateX(${angleY}deg) rotateY(${angleX}deg)`;
 
             setTimeout(() => {
-                button.style.transform = 'none';
+                clickButton.style.transform = 'none';
             }, 300);
         }
 
         function toggleBoostMenu() {
-            if (boostMenu.style.display === 'none' || boostMenu.style.display === '') {
-                boostMenu.style.display = 'block';
-            } else {
-                boostMenu.style.display = 'none';
-            }
+            boostMenu.style.display = boostMenu.style.display === 'none' || boostMenu.style.display === '' ? 'block' : 'none';
         }
 
         function closeBoostMenuHandler() {
@@ -316,7 +323,7 @@
                 score -= energyLimitCost;
                 energyLimitLevel++;
                 energyLimitCost *= 2;
-                updateEnergy(0); // Обновление отображения энергии после покупки увеличения лимита энергии
+                updateEnergy(0);
                 updateScoreDisplay();
             }
         }
@@ -341,3 +348,4 @@
     </script>
 </body>
 </html>
+
