@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin</title>
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -166,6 +166,11 @@
             text-align: center;
         }
 
+        .close-button:hover {
+            background-color: #f2c6c6;
+            border-radius: 50%;
+        }
+
         @keyframes fly {
             0% {
                 transform: translateY(0);
@@ -286,7 +291,7 @@
 
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
-            heart.classList.add('heart');
+            heart.className = 'heart';
             heart.style.left = `${clickX}px`;
             heart.style.top = `${clickY}px`;
             gameContainer.appendChild(heart);
