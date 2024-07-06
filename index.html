@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin</title>
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -141,6 +141,10 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
+            width: calc(100% - 40px);
+            max-width: 300px;
+            margin: 10px auto;
+            display: block;
         }
 
         .boost-menu button:hover {
@@ -279,8 +283,8 @@
         function createHeartAnimation(clickX, clickY) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`;
-            heart.style.top = `${clickY - 20}px`;
+            heart.style.left = `${clickX}px`;
+            heart.style.top = `${clickY}px`;
             gameContainer.appendChild(heart);
 
             setTimeout(() => {
