@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin</title>
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -151,27 +151,6 @@
             background-color: #900034;
         }
 
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            cursor: pointer;
-            color: #a80040;
-            background: none;
-            border: none; /* Убираем рамку */
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            padding: 0; /* Убираем отступы внутри кнопки */
-        }
-
-        .close-button:hover {
-            background-color: #f2c6c6;
-            border-radius: 50%;
-        }
-
         @keyframes fly {
             0% {
                 transform: translateY(0);
@@ -212,7 +191,6 @@
     </div>
     
     <div class="boost-menu" id="boostMenu">
-        <button class="close-button" id="closeBoostMenu">×</button>
         <p class="balance-text">Ваш баланс:</p>
         <p class="balance"><span id="boostBalance">0</span><img src="heart_counter.png" alt="Сердечко" style="width: 20px; height: 20px; margin-left: 5px;"></p>
         <button id="buyMultitap">Купить Multitap</button>
@@ -234,7 +212,6 @@
         const boostBalanceDisplay = document.getElementById('boostBalance');
         const boostButton = document.getElementById('boostButton');
         const boostMenu = document.getElementById('boostMenu');
-        const closeBoostMenu = document.getElementById('closeBoostMenu');
         const clickButton = document.getElementById('clickButton');
         const gameContainer = document.querySelector('.game-container');
 
@@ -319,10 +296,6 @@
             boostMenu.style.display = boostMenu.style.display === 'none' || boostMenu.style.display === '' ? 'block' : 'none';
         }
 
-        function closeBoostMenuHandler() {
-            boostMenu.style.display = 'none';
-        }
-
         function buyMultitapHandler() {
             if (score >= multitapCost) {
                 score -= multitapCost;
@@ -345,7 +318,6 @@
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
         boostButton.addEventListener('click', toggleBoostMenu);
-        closeBoostMenu.addEventListener('click', closeBoostMenuHandler);
         document.getElementById('buyMultitap').addEventListener('click', buyMultitapHandler);
         document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimitHandler);
 
