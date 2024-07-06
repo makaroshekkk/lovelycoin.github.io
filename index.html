@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -132,6 +132,21 @@
             color: #a80040; /* Цвет текста количества монет */
         }
 
+        .boost-menu button.close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #a80040; /* Цвет текста крестика */
+        }
+
+        .boost-menu button.close-button:hover {
+            color: #900034; /* Изменение цвета текста при наведении */
+        }
+
         .boost-menu button {
             background-color: #a80040;
             color: white;
@@ -191,6 +206,7 @@
     </div>
     
     <div class="boost-menu" id="boostMenu">
+        <button class="close-button" onclick="toggleBoostMenu()">✕</button>
         <p class="balance-text">Ваш баланс:</p>
         <p class="balance"><span id="boostBalance">0</span><img src="heart_counter.png" alt="Сердечко" style="width: 20px; height: 20px; margin-left: 5px;"></p>
         <button id="buyMultitap">Купить Multitap</button>
