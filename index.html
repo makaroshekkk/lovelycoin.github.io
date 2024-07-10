@@ -103,17 +103,38 @@
 
         .boost-menu {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            padding: 20px;
-            background-color: white;
-            border: 2px solid #a80040;
-            border-radius: 10px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffe6e6;
             display: none;
             text-align: center;
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .boost-menu h2 {
+            font-size: 24px;
+            color: #a80040;
+            margin-bottom: 20px;
+        }
+
+        .balance {
+            font-size: 36px;
+            color: #a80040;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .balance .heart-counter {
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
         }
 
         .boost-menu button {
@@ -129,6 +150,45 @@
 
         .boost-menu button:hover {
             background-color: #900034;
+        }
+
+        .upgrade-button {
+            width: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #a80040;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .upgrade-button img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .upgrade-button .details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: auto;
+        }
+
+        .upgrade-button .details span {
+            font-size: 16px;
+        }
+
+        .upgrade-button .level {
+            font-size: 14px;
+        }
+
+        .upgrade-button .cost {
+            font-size: 14px;
         }
 
         @keyframes fly {
@@ -171,10 +231,28 @@
     </div>
     
     <div class="boost-menu" id="boostMenu">
-        <p>Boost Options</p>
-        <button id="closeBoostMenu">Close</button>
-        <button id="buyMultitap">Buy Multitap</button>
-        <button id="buyEnergyLimit">Buy Energy Limit</button>
+        <h2>Ваш баланс:</h2>
+        <div class="balance">
+            <span id="boostScore">0</span>
+            <div class="heart-counter"></div>
+        </div>
+        <button class="upgrade-button" id="buyMultitap">
+            <img src="boost.png" alt="Мультитап">
+            <div class="details">
+                <span>Мультитап</span>
+                <span class="level">Уровень: <span id="multitapLevel">0</span></span>
+                <span class="cost">Цена: <span id="multitapCost">500</span></span>
+            </div>
+        </button>
+        <button class="upgrade-button" id="buyEnergyLimit">
+            <img src="energy.png" alt="Энерджи Лимит">
+            <div class="details">
+                <span>Энерджи Лимит</span>
+                <span class="level">Уровень: <span id="energyLimitLevel">0</span></span>
+                <span class="cost">Цена: <span id="energyLimitCost">500</span></span>
+            </div>
+        </button>
+        <button id="closeBoostMenu">Закрыть</button>
     </div>
 
     <script>
@@ -187,10 +265,13 @@
         let energyLimitCost = 500;
 
         const scoreDisplay = document.getElementById('score');
+        const boostScoreDisplay = document.getElementById('boostScore');
         const currentEnergyDisplay = document.getElementById('currentEnergy');
         const maxEnergyDisplay = document.getElementById('maxEnergy');
         const multitapLevelDisplay = document.getElementById('multitapLevel');
         const energyLimitLevelDisplay = document.getElementById('energyLimitLevel');
+        const multitapCostDisplay = document.getElementById('multitapCost');
+        const energyLimitCostDisplay = document.getElementById('energyLimitCost');
         const boostButton = document.getElementById('boostButton');
         const boostMenu = document.getElementById('boostMenu');
         const closeBoostMenu = document.getElementById('closeBoostMenu');
@@ -211,129 +292,57 @@
         }
 
         function updateScoreDisplay() {
-            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
-                : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
-                : score;
-            scoreDisplay.innerText = formattedScore;
+            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(1) + 'M' : score >= 1000 ? (score / 1000).toFixed(1) + 'K' : score.toString();
+            scoreDisplay.textContent = formattedScore;
         }
 
-        function handleButtonClick(event) {
-            event.preventDefault();
-
-            // Проверка на наличие энергии
-            if (currentEnergy > 0) {
-                const buttonRect = clickButton.getBoundingClientRect();
-                let clickX, clickY;
-
-                if (event.type === 'click') {
-                    clickX = event.clientX - buttonRect.left;
-                    clickY = event.clientY - buttonRect.top;
-                } else if (event.type === 'touchstart') {
-                    const touch = event.touches[0];
-                    clickX = touch.clientX - buttonRect.left;
-                    clickY = touch.clientY - buttonRect.top;
-                }
-
-                createHeartAnimation(clickX, clickY);
-
-                score += 1 + multitapLevel;
-                updateScoreDisplay();
-
-                tiltButton(event, buttonRect);
-
-                // Увеличение энергии на количество монеток, полученных за нажатие
-                updateEnergy(-(1 + multitapLevel));
-
-                updateAnotherCounter(score);
-            }
-        }
-
-        function createHeartAnimation(clickX, clickY) {
+        clickButton.addEventListener('click', () => {
+            score += 1 + multitapLevel;
+            updateScoreDisplay();
             const heart = document.createElement('div');
             heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`;
-            heart.style.top = `${clickY - 20}px`;
+            heart.style.left = Math.random() * 100 + 'vw';
             gameContainer.appendChild(heart);
-
-            heart.addEventListener('animationend', () => {
-                heart.remove();
-            });
-        }
-
-        function tiltButton(event, buttonRect) {
-            const button = clickButton;
-            const centerX = buttonRect.width / 2;
-            const centerY = buttonRect.height / 2;
-
-            let clientX, clientY;
-
-            if (event.type === 'click') {
-                clientX = event.clientX;
-                clientY = event.clientY;
-            } else if (event.type === 'touchstart') {
-                const touch = event.touches[0];
-                clientX = touch.clientX;
-                clientY = touch.clientY;
-            }
-
-            const angleX = (clientX - buttonRect.left - centerX) / 8;
-            const angleY = (clientY - buttonRect.top - centerY) / 8;
-
-            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
-
             setTimeout(() => {
-                button.style.transform = 'none';
-            }, 300);
-        }
+                heart.remove();
+            }, 1000);
+        });
 
-        function toggleBoostMenu() {
-            if (boostMenu.style.display === 'none' || boostMenu.style.display === '') {
-                boostMenu.style.display = 'block';
-            } else {
-                boostMenu.style.display = 'none';
-            }
-        }
+        boostButton.addEventListener('click', () => {
+            boostMenu.style.display = 'flex';
+            boostScoreDisplay.textContent = score;
+        });
 
-        function closeBoostMenuHandler() {
+        closeBoostMenu.addEventListener('click', () => {
             boostMenu.style.display = 'none';
-        }
+        });
 
-        function buyMultitapHandler() {
+        document.getElementById('buyMultitap').addEventListener('click', () => {
             if (score >= multitapCost) {
                 score -= multitapCost;
                 multitapLevel++;
-                multitapCost *= 2;
+                multitapCost = Math.round(multitapCost * 1.5);
                 updateScoreDisplay();
+                multitapLevelDisplay.textContent = multitapLevel;
+                multitapCostDisplay.textContent = multitapCost;
+                boostScoreDisplay.textContent = score;
             }
-        }
+        });
 
-        function buyEnergyLimitHandler() {
+        document.getElementById('buyEnergyLimit').addEventListener('click', () => {
             if (score >= energyLimitCost) {
                 score -= energyLimitCost;
                 energyLimitLevel++;
-                energyLimitCost *= 2;
-                updateEnergy(0); // Update energy display after buying energy limit
+                energyLimitCost = Math.round(energyLimitCost * 1.5);
                 updateScoreDisplay();
+                energyLimitLevelDisplay.textContent = energyLimitLevel;
+                energyLimitCostDisplay.textContent = energyLimitCost;
+                boostScoreDisplay.textContent = score;
+                updateEnergy(0);
             }
-        }
+        });
 
-        clickButton.addEventListener('click', handleButtonClick);
-        clickButton.addEventListener('touchstart', handleButtonClick);
-        boostButton.addEventListener('click', toggleBoostMenu);
-        closeBoostMenu.addEventListener('click', closeBoostMenuHandler);
-        document.getElementById('buyMultitap').addEventListener('click', buyMultitapHandler);
-        document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimitHandler);
-
-        function updateAnotherCounter(score) {
-            document.getElementById('score').innerText = score;
-        }
-
-        setInterval(() => {
-            if (currentEnergy < maxEnergy) {
-                currentEnergy++;
-                currentEnergyDisplay.textContent = currentEnergy;
-            }
-        }, 1000);
+        updateEnergy(0);
     </script>
 </body>
 </html>
