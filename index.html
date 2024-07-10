@@ -125,6 +125,7 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
+            width: 100%;
         }
 
         .boost-menu button:hover {
@@ -132,73 +133,38 @@
         }
 
         .boost-options {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            padding: 20px;
-            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .boost-option {
+            background-color: #f2c6c6;
             border: 2px solid #a80040;
             border-radius: 10px;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .boost-options h2 {
-            margin-bottom: 10px;
-            font-size: 24px;
-            color: #a80040;
-        }
-
-        .boost-options .balance {
-            font-size: 18px;
-            color: #a80040;
-            margin-bottom: 10px;
-        }
-
-        .boost-options .boost-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 10px;
             margin-top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .boost-options .boost-item img {
+        .boost-option img {
             width: 28px;
             height: 28px;
             margin-right: 10px;
         }
 
-        .boost-options .boost-item .details {
+        .boost-option .details {
+            flex: 1;
             text-align: left;
         }
 
-        .boost-options .boost-item .level {
-            font-size: 16px;
-            color: #333;
-        }
-
-        .boost-options .boost-item .price {
-            font-size: 16px;
+        .boost-option .details span {
+            display: block;
+            font-size: 14px;
             color: #a80040;
-            font-weight: bold;
-        }
-
-        .boost-options button {
-            background-color: #a80040;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        .boost-options button:hover {
-            background-color: #900034;
         }
 
         @keyframes fly {
@@ -240,26 +206,31 @@
         </div>
     </div>
     
-    <div class="boost-options" id="boostMenu">
-        <h2>Boost Options</h2>
-        <div class="balance">
-            Ваш баланс: <span id="scoreBalance">0</span>
+    <div class="boost-menu" id="boostMenu">
+        <p>Ваш баланс:</p>
+        <div class="score-wrapper">
+            <div class="score"><span id="score">0</span></div>
+            <div class="heart-counter"></div>
         </div>
-        <div class="boost-item">
-            <img src="multitap.png" alt="Multitap">
-            <div class="details">
-                <div class="level">Уровень: <span id="multitapLevel">0</span></div>
-                <div class="price">Цена: <span id="multitapCost">500</span></div>
+        <div class="boost-options">
+            <div class="boost-option">
+                <img src="multitap.png" alt="Мультитап">
+                <div class="details">
+                    <span>Мультитап Уровень: 0</span>
+                    <span>Цена: 500</span>
+                </div>
+                <button id="buyMultitap">Купить Мультитап</button>
+            </div>
+            <div class="boost-option">
+                <img src="energy_limit.png" alt="Энергия Лимит">
+                <div class="details">
+                    <span>Энергия Лимит Уровень: 0</span>
+                    <span>Цена: 500</span>
+                </div>
+                <button id="buyEnergyLimit">Купить Энергия Лимит</button>
             </div>
         </div>
-        <div class="boost-item">
-            <img src="energy_limit.png" alt="Energy Limit">
-            <div class="details">
-                <div class="level">Уровень: <span id="energyLimitLevel">0</span></div>
-                <div class="price">Цена: <span id="energyLimitCost">500</span></div>
-            </div>
-        </div>
-        <button id="closeBoostMenu">Close</button>
+        <button id="closeBoostMenu">Закрыть</button>
     </div>
 
     <script>
@@ -274,15 +245,11 @@
         const scoreDisplay = document.getElementById('score');
         const currentEnergyDisplay = document.getElementById('currentEnergy');
         const maxEnergyDisplay = document.getElementById('maxEnergy');
-        const multitapLevelDisplay = document.getElementById('multitapLevel');
-        const energyLimitLevelDisplay = document.getElementById('energyLimitLevel');
-        const scoreBalanceDisplay = document.getElementById('scoreBalance');
         const boostButton = document.getElementById('boostButton');
         const boostMenu = document.getElementById('boostMenu');
         const closeBoostMenu = document.getElementById('closeBoostMenu');
         const clickButton = document.getElementById('clickButton');
         const gameContainer = document.querySelector('.game-container');
-        const boostOptions = document.querySelector('.boost-options');
 
         function updateEnergy(amount) {
             currentEnergy += amount;
@@ -302,13 +269,11 @@
                 : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
                 : score;
             scoreDisplay.innerText = formattedScore;
-            scoreBalanceDisplay.innerText = formattedScore; // Update balance display
         }
 
         function handleButtonClick(event) {
             event.preventDefault();
 
-            // Проверка на наличие энергии
             if (currentEnergy > 0) {
                 const buttonRect = clickButton.getBoundingClientRect();
                 let clickX, clickY;
@@ -329,7 +294,6 @@
 
                 tiltButton(event, buttonRect);
 
-                // Увеличение энергии на количество монеток, полученных за нажатие
                 updateEnergy(-(1 + multitapLevel));
 
                 updateAnotherCounter(score);
@@ -375,11 +339,15 @@
         }
 
         function toggleBoostMenu() {
-            boostOptions.style.display = 'block';
+            if (boostMenu.style.display === 'none' || boostMenu.style.display === '') {
+                boostMenu.style.display = 'block';
+            } else {
+                boostMenu.style.display = 'none';
+            }
         }
 
         function closeBoostMenuHandler() {
-            boostOptions.style.display = 'none';
+            boostMenu.style.display = 'none';
         }
 
         function buyMultitapHandler() {
@@ -396,7 +364,7 @@
                 score -= energyLimitCost;
                 energyLimitLevel++;
                 energyLimitCost *= 2;
-                updateEnergy(0); // Update energy display after buying energy limit
+                updateEnergy(0);
                 updateScoreDisplay();
             }
         }
