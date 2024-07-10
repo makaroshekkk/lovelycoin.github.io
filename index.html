@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin</title>
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -108,15 +108,21 @@
             width: 100%;
             height: 100%;
             padding: 20px;
-            background-color: rgba(255, 230, 230, 0.9); /* Полупрозрачный фон */
+            background-color: #ffe6e6; /* Полностью непрозрачный фон */
             display: none;
             text-align: center;
             z-index: 1000;
-            color: #000; /* Изменено на черный цвет текста для лучшей читаемости */
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .boost-options {
-            margin-top: 50px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
         }
 
         .boost-option {
@@ -129,7 +135,6 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            position: relative;
         }
 
         .boost-option img {
