@@ -131,6 +131,76 @@
             background-color: #900034;
         }
 
+        .boost-options {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            border: 2px solid #a80040;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .boost-options h2 {
+            margin-bottom: 10px;
+            font-size: 24px;
+            color: #a80040;
+        }
+
+        .boost-options .balance {
+            font-size: 18px;
+            color: #a80040;
+            margin-bottom: 10px;
+        }
+
+        .boost-options .boost-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .boost-options .boost-item img {
+            width: 28px;
+            height: 28px;
+            margin-right: 10px;
+        }
+
+        .boost-options .boost-item .details {
+            text-align: left;
+        }
+
+        .boost-options .boost-item .level {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .boost-options .boost-item .price {
+            font-size: 16px;
+            color: #a80040;
+            font-weight: bold;
+        }
+
+        .boost-options button {
+            background-color: #a80040;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .boost-options button:hover {
+            background-color: #900034;
+        }
+
         @keyframes fly {
             0% {
                 transform: translateY(0);
@@ -165,16 +235,31 @@
             </div>
             <div class="boost-counter" id="boostButton">
                 <img src="boost.png" alt="Boost">
-                <span>Booooooooost</span>
+                <span>Boost</span>
             </div>
         </div>
     </div>
     
-    <div class="boost-menu" id="boostMenu">
-        <p>Boost Options</p>
+    <div class="boost-options" id="boostMenu">
+        <h2>Boost Options</h2>
+        <div class="balance">
+            Ваш баланс: <span id="scoreBalance">0</span>
+        </div>
+        <div class="boost-item">
+            <img src="multitap.png" alt="Multitap">
+            <div class="details">
+                <div class="level">Уровень: <span id="multitapLevel">0</span></div>
+                <div class="price">Цена: <span id="multitapCost">500</span></div>
+            </div>
+        </div>
+        <div class="boost-item">
+            <img src="energy_limit.png" alt="Energy Limit">
+            <div class="details">
+                <div class="level">Уровень: <span id="energyLimitLevel">0</span></div>
+                <div class="price">Цена: <span id="energyLimitCost">500</span></div>
+            </div>
+        </div>
         <button id="closeBoostMenu">Close</button>
-        <button id="buyMultitap">Buy Multitap</button>
-        <button id="buyEnergyLimit">Buy Energy Limit</button>
     </div>
 
     <script>
@@ -191,11 +276,13 @@
         const maxEnergyDisplay = document.getElementById('maxEnergy');
         const multitapLevelDisplay = document.getElementById('multitapLevel');
         const energyLimitLevelDisplay = document.getElementById('energyLimitLevel');
+        const scoreBalanceDisplay = document.getElementById('scoreBalance');
         const boostButton = document.getElementById('boostButton');
         const boostMenu = document.getElementById('boostMenu');
         const closeBoostMenu = document.getElementById('closeBoostMenu');
         const clickButton = document.getElementById('clickButton');
         const gameContainer = document.querySelector('.game-container');
+        const boostOptions = document.querySelector('.boost-options');
 
         function updateEnergy(amount) {
             currentEnergy += amount;
@@ -215,6 +302,7 @@
                 : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
                 : score;
             scoreDisplay.innerText = formattedScore;
+            scoreBalanceDisplay.innerText = formattedScore; // Update balance display
         }
 
         function handleButtonClick(event) {
@@ -287,15 +375,11 @@
         }
 
         function toggleBoostMenu() {
-            if (boostMenu.style.display === 'none' || boostMenu.style.display === '') {
-                boostMenu.style.display = 'block';
-            } else {
-                boostMenu.style.display = 'none';
-            }
+            boostOptions.style.display = 'block';
         }
 
         function closeBoostMenuHandler() {
-            boostMenu.style.display = 'none';
+            boostOptions.style.display = 'none';
         }
 
         function buyMultitapHandler() {
