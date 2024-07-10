@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin</title>
+    <title>LovelyCoin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,7 +55,7 @@
             width: 40px;
             height: 40px;
             margin-left: 5px;
-            background-image: url('https://angrybeav9rs.github.io/lovelycoin.github.io/images/heart_counter.png');
+            background-image: url('heart_counter.png');
             background-size: cover;
         }
 
@@ -63,7 +63,7 @@
             position: absolute;
             width: 40px;
             height: 40px;
-            background-image: url('https://angrybeav9rs.github.io/lovelycoin.github.io/images/heart.png');
+            background-image: url('heart.png');
             background-size: cover;
             animation: fly 1s linear;
         }
@@ -103,31 +103,17 @@
 
         .boost-menu {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            border: 2px solid #a80040;
+            border-radius: 10px;
             display: none;
-        }
-
-        .boost-menu .balance {
-            font-size: 24px;
-            color: #a80040;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .boost-menu .balance img {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
+            text-align: center;
+            z-index: 1000;
         }
 
         .boost-menu button {
@@ -135,27 +121,14 @@
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 10px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
-            display: flex;
-            align-items: center;
         }
 
         .boost-menu button:hover {
             background-color: #900034;
-        }
-
-        .boost-menu button img {
-            width: 28px;
-            height: 28px;
-            margin-right: 10px;
-        }
-
-        .boost-menu button span {
-            margin-left: auto;
-            margin-right: 10px;
         }
 
         @keyframes fly {
@@ -185,32 +158,23 @@
             <div class="score"><span id="score">0</span></div>
             <div class="heart-counter"></div>
         </div>
-        <img src="https://angrybeav9rs.github.io/lovelycoin.github.io/images/1.png" id="clickButton" alt="Кнопка">
+        <img src="1.png" id="clickButton" alt="Кнопка">
         <div class="counters">
             <div class="energy-counter">
-                <img src="https://angrybeav9rs.github.io/lovelycoin.github.io/images/energy.png" alt="Энергия"> <span id="currentEnergy">1000</span>/<span id="maxEnergy">1000</span>
+                <img src="energy.png" alt="Энергия"> <span id="currentEnergy">1000</span>/<span id="maxEnergy">1000</span>
             </div>
             <div class="boost-counter" id="boostButton">
-                <img src="https://angrybeav9rs.github.io/lovelycoin.github.io/images/boost.png" alt="Boost">
+                <img src="boost.png" alt="Boost">
                 <span>Boost</span>
             </div>
         </div>
     </div>
     
     <div class="boost-menu" id="boostMenu">
-        <div class="balance">
-            <img src="https://angrybeav9rs.github.io/lovelycoin.github.io/images/heart_counter.png" alt="Heart">
-            <span id="boostBalance">0</span>
-        </div>
-        <button id="closeBoostMenu">Закрыть</button>
-        <button id="buyMultitap">
-            <img src="https://angrybeav9rs.github.io/lovelycoin.github.io/images/multitap.png" alt="Multitap">
-            Multitap <span id="multitapLevel">0</span> - <span id="multitapCost">500</span>
-        </button>
-        <button id="buyEnergyLimit">
-            <img src="https://angrybeav9rs.github.io/lovelycoin.github.io/images/energy_limit.png" alt="Energy Limit">
-            Energy Limit <span id="energyLimitLevel">0</span> - <span id="energyLimitCost">500</span>
-        </button>
+        <p>Boost Options</p>
+        <button id="closeBoostMenu">Close</button>
+        <button id="buyMultitap">Buy Multitap</button>
+        <button id="buyEnergyLimit">Buy Energy Limit</button>
     </div>
 
     <script>
@@ -227,9 +191,6 @@
         const maxEnergyDisplay = document.getElementById('maxEnergy');
         const multitapLevelDisplay = document.getElementById('multitapLevel');
         const energyLimitLevelDisplay = document.getElementById('energyLimitLevel');
-        const multitapCostDisplay = document.getElementById('multitapCost');
-        const energyLimitCostDisplay = document.getElementById('energyLimitCost');
-        const boostBalanceDisplay = document.getElementById('boostBalance');
         const boostButton = document.getElementById('boostButton');
         const boostMenu = document.getElementById('boostMenu');
         const closeBoostMenu = document.getElementById('closeBoostMenu');
@@ -268,77 +229,111 @@
                     clickX = event.clientX - buttonRect.left;
                     clickY = event.clientY - buttonRect.top;
                 } else if (event.type === 'touchstart') {
-                    clickX = event.touches[0].clientX - buttonRect.left;
-                    clickY = event.touches[0].clientY - buttonRect.top;
+                    const touch = event.touches[0];
+                    clickX = touch.clientX - buttonRect.left;
+                    clickY = touch.clientY - buttonRect.top;
                 }
 
-                const centerX = buttonRect.width / 2;
-                const centerY = buttonRect.height / 2;
-                const deltaX = clickX - centerX;
-                const deltaY = clickY - centerY;
+                createHeartAnimation(clickX, clickY);
 
-                const rotationAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-                clickButton.style.transform = `rotate(${rotationAngle}deg)`;
-
-                score++;
+                score += 1 + multitapLevel;
                 updateScoreDisplay();
 
-                updateEnergy(-1);
+                tiltButton(event, buttonRect);
 
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.style.left = `${clickX - 20}px`;
-                heart.style.top = `${clickY - 20}px`;
-                gameContainer.appendChild(heart);
+                // Увеличение энергии на количество монеток, полученных за нажатие
+                updateEnergy(-(1 + multitapLevel));
 
-                setTimeout(() => {
-                    heart.remove();
-                }, 1000);
-            } else {
-                alert("Недостаточно энергии!");
+                updateAnotherCounter(score);
             }
+        }
+
+        function createHeartAnimation(clickX, clickY) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = `${clickX - 20}px`;
+            heart.style.top = `${clickY - 20}px`;
+            gameContainer.appendChild(heart);
+
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+
+        function tiltButton(event, buttonRect) {
+            const button = clickButton;
+            const centerX = buttonRect.width / 2;
+            const centerY = buttonRect.height / 2;
+
+            let clientX, clientY;
+
+            if (event.type === 'click') {
+                clientX = event.clientX;
+                clientY = event.clientY;
+            } else if (event.type === 'touchstart') {
+                const touch = event.touches[0];
+                clientX = touch.clientX;
+                clientY = touch.clientY;
+            }
+
+            const angleX = (clientX - buttonRect.left - centerX) / 8;
+            const angleY = (clientY - buttonRect.top - centerY) / 8;
+
+            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
+
+            setTimeout(() => {
+                button.style.transform = 'none';
+            }, 300);
         }
 
         function toggleBoostMenu() {
-            boostMenu.style.display = boostMenu.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        function buyMultitap() {
-            if (score >= multitapCost) {
-                score -= multitapCost;
-                multitapLevel++;
-                multitapCost = Math.floor(multitapCost * 1.2);
-                multitapLevelDisplay.textContent = multitapLevel;
-                multitapCostDisplay.textContent = multitapCost;
-                updateScoreDisplay();
+            if (boostMenu.style.display === 'none' || boostMenu.style.display === '') {
+                boostMenu.style.display = 'block';
             } else {
-                alert("Недостаточно сердечек для улучшения!");
+                boostMenu.style.display = 'none';
             }
         }
 
-        function buyEnergyLimit() {
+        function closeBoostMenuHandler() {
+            boostMenu.style.display = 'none';
+        }
+
+        function buyMultitapHandler() {
+            if (score >= multitapCost) {
+                score -= multitapCost;
+                multitapLevel++;
+                multitapCost *= 2;
+                updateScoreDisplay();
+            }
+        }
+
+        function buyEnergyLimitHandler() {
             if (score >= energyLimitCost) {
                 score -= energyLimitCost;
                 energyLimitLevel++;
-                energyLimitCost = Math.floor(energyLimitCost * 1.2);
-                energyLimitLevelDisplay.textContent = energyLimitLevel;
-                energyLimitCostDisplay.textContent = energyLimitCost;
-                updateEnergy(0);
+                energyLimitCost *= 2;
+                updateEnergy(0); // Update energy display after buying energy limit
                 updateScoreDisplay();
-            } else {
-                alert("Недостаточно сердечек для улучшения!");
             }
         }
 
         clickButton.addEventListener('click', handleButtonClick);
         clickButton.addEventListener('touchstart', handleButtonClick);
-
         boostButton.addEventListener('click', toggleBoostMenu);
-        closeBoostMenu.addEventListener('click', toggleBoostMenu);
-        document.getElementById('buyMultitap').addEventListener('click', buyMultitap);
-        document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimit);
+        closeBoostMenu.addEventListener('click', closeBoostMenuHandler);
+        document.getElementById('buyMultitap').addEventListener('click', buyMultitapHandler);
+        document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimitHandler);
 
-        updateEnergy(0);
+        function updateAnotherCounter(score) {
+            document.getElementById('score').innerText = score;
+        }
+
+        setInterval(() => {
+            if (currentEnergy < maxEnergy) {
+                currentEnergy++;
+                currentEnergyDisplay.textContent = currentEnergy;
+            }
+        }, 1000);
     </script>
 </body>
 </html>
