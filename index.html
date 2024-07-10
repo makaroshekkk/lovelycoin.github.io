@@ -107,23 +107,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #ffe6e6;
+            background-color: rgba(255, 255, 255, 0.95);
             display: none;
-            text-align: center;
-            z-index: 1000;
-            display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
 
         .boost-menu h2 {
+            margin-bottom: 20px;
             font-size: 24px;
             color: #a80040;
-            margin-bottom: 20px;
         }
 
-        .balance {
+        .boost-menu .balance {
             font-size: 36px;
             color: #a80040;
             display: flex;
@@ -131,10 +129,12 @@
             margin-bottom: 20px;
         }
 
-        .balance .heart-counter {
+        .boost-menu .balance .heart-counter {
             width: 40px;
             height: 40px;
-            margin-left: 10px;
+            margin-left: 5px;
+            background-image: url('heart_counter.png');
+            background-size: cover;
         }
 
         .boost-menu button {
@@ -142,53 +142,28 @@
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 15px;
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
+            width: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .boost-menu button img {
+            width: 28px;
+            height: 28px;
+            margin-right: 10px;
         }
 
         .boost-menu button:hover {
             background-color: #900034;
         }
 
-        .upgrade-button {
-            width: 80%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #a80040;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 10px;
-            margin: 10px 0;
-            cursor: pointer;
-        }
-
-        .upgrade-button img {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .upgrade-button .details {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+        .boost-menu button span {
             margin-right: auto;
-        }
-
-        .upgrade-button .details span {
-            font-size: 16px;
-        }
-
-        .upgrade-button .level {
-            font-size: 14px;
-        }
-
-        .upgrade-button .cost {
-            font-size: 14px;
         }
 
         @keyframes fly {
@@ -233,26 +208,22 @@
     <div class="boost-menu" id="boostMenu">
         <h2>Ваш баланс:</h2>
         <div class="balance">
-            <span id="boostScore">0</span>
+            <div class="score"><span id="boostScore">0</span></div>
             <div class="heart-counter"></div>
         </div>
-        <button class="upgrade-button" id="buyMultitap">
-            <img src="boost.png" alt="Мультитап">
-            <div class="details">
-                <span>Мультитап</span>
-                <span class="level">Уровень: <span id="multitapLevel">0</span></span>
-                <span class="cost">Цена: <span id="multitapCost">500</span></span>
-            </div>
-        </button>
-        <button class="upgrade-button" id="buyEnergyLimit">
-            <img src="energy.png" alt="Энерджи Лимит">
-            <div class="details">
-                <span>Энерджи Лимит</span>
-                <span class="level">Уровень: <span id="energyLimitLevel">0</span></span>
-                <span class="cost">Цена: <span id="energyLimitCost">500</span></span>
-            </div>
-        </button>
         <button id="closeBoostMenu">Закрыть</button>
+        <button id="buyMultitap">
+            <img src="multitap.png" alt="Multitap">
+            <span>Мультитап</span>
+            <span id="multitapLevel">0</span>
+            <span id="multitapCost">500</span>
+        </button>
+        <button id="buyEnergyLimit">
+            <img src="energy_limit.png" alt="Energy Limit">
+            <span>Энерджи Лимит</span>
+            <span id="energyLimitLevel">0</span>
+            <span id="energyLimitCost">500</span>
+        </button>
     </div>
 
     <script>
@@ -265,9 +236,9 @@
         let energyLimitCost = 500;
 
         const scoreDisplay = document.getElementById('score');
-        const boostScoreDisplay = document.getElementById('boostScore');
         const currentEnergyDisplay = document.getElementById('currentEnergy');
         const maxEnergyDisplay = document.getElementById('maxEnergy');
+        const boostScoreDisplay = document.getElementById('boostScore');
         const multitapLevelDisplay = document.getElementById('multitapLevel');
         const energyLimitLevelDisplay = document.getElementById('energyLimitLevel');
         const multitapCostDisplay = document.getElementById('multitapCost');
@@ -292,57 +263,104 @@
         }
 
         function updateScoreDisplay() {
-            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(1) + 'M' : score >= 1000 ? (score / 1000).toFixed(1) + 'K' : score.toString();
-            scoreDisplay.textContent = formattedScore;
+            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
+                : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
+                : score;
+            scoreDisplay.innerText = formattedScore;
+            boostScoreDisplay.innerText = formattedScore;
         }
 
-        clickButton.addEventListener('click', () => {
-            score += 1 + multitapLevel;
-            updateScoreDisplay();
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.style.left = Math.random() * 100 + 'vw';
-            gameContainer.appendChild(heart);
-            setTimeout(() => {
-                heart.remove();
-            }, 1000);
-        });
+        function handleButtonClick(event) {
+            event.preventDefault();
 
-        boostButton.addEventListener('click', () => {
+            // Проверка на наличие энергии
+            if (currentEnergy > 0) {
+                const buttonRect = clickButton.getBoundingClientRect();
+                let clickX, clickY;
+
+                if (event.type === 'click') {
+                    clickX = event.clientX - buttonRect.left;
+                    clickY = event.clientY - buttonRect.top;
+                } else if (event.type === 'touchstart') {
+                    const touch = event.touches[0];
+                    clickX = touch.clientX - buttonRect.left;
+                    clickY = touch.clientY - buttonRect.top;
+                }
+
+                const centerX = buttonRect.width / 2;
+                const centerY = buttonRect.height / 2;
+                const distanceX = clickX - centerX;
+                const distanceY = clickY - centerY;
+                const maxDistance = Math.sqrt(centerX ** 2 + centerY ** 2);
+                const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+
+                const tiltX = (distanceX / centerX) * 15;
+                const tiltY = (distanceY / centerY) * 15;
+                const tiltAmount = (1 - distance / maxDistance) * 0.15 + 0.02;
+
+                clickButton.style.transform = `rotateX(${tiltY}deg) rotateY(${tiltX}deg) scale(${1 + tiltAmount})`;
+
+                // Сброс трансформации после анимации
+                setTimeout(() => {
+                    clickButton.style.transform = 'rotateX(0) rotateY(0) scale(1)';
+                }, 200);
+
+                score++;
+                updateScoreDisplay();
+
+                // Отобразить сердце
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = `${event.clientX - 20}px`;
+                heart.style.top = `${event.clientY - 20}px`;
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 1000);
+
+                // Обновление энергии
+                updateEnergy(-1);
+            }
+        }
+
+        function showBoostMenu() {
             boostMenu.style.display = 'flex';
-            boostScoreDisplay.textContent = score;
-        });
+        }
 
-        closeBoostMenu.addEventListener('click', () => {
+        function closeBoostMenuFunc() {
             boostMenu.style.display = 'none';
-        });
+        }
 
-        document.getElementById('buyMultitap').addEventListener('click', () => {
+        function buyMultitap() {
             if (score >= multitapCost) {
                 score -= multitapCost;
                 multitapLevel++;
-                multitapCost = Math.round(multitapCost * 1.5);
+                multitapCost += 500;
                 updateScoreDisplay();
                 multitapLevelDisplay.textContent = multitapLevel;
                 multitapCostDisplay.textContent = multitapCost;
-                boostScoreDisplay.textContent = score;
             }
-        });
+        }
 
-        document.getElementById('buyEnergyLimit').addEventListener('click', () => {
+        function buyEnergyLimit() {
             if (score >= energyLimitCost) {
                 score -= energyLimitCost;
                 energyLimitLevel++;
-                energyLimitCost = Math.round(energyLimitCost * 1.5);
+                energyLimitCost += 500;
                 updateScoreDisplay();
                 energyLimitLevelDisplay.textContent = energyLimitLevel;
                 energyLimitCostDisplay.textContent = energyLimitCost;
-                boostScoreDisplay.textContent = score;
-                updateEnergy(0);
+                updateEnergy(0); // обновление максимальной энергии
             }
-        });
+        }
 
-        updateEnergy(0);
+        clickButton.addEventListener('click', handleButtonClick);
+        clickButton.addEventListener('touchstart', handleButtonClick);
+        boostButton.addEventListener('click', showBoostMenu);
+        closeBoostMenu.addEventListener('click', closeBoostMenuFunc);
+        document.getElementById('buyMultitap').addEventListener('click', buyMultitap);
+        document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimit);
     </script>
 </body>
 </html>
