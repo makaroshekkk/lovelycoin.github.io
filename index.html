@@ -102,18 +102,28 @@
         }
 
         .boost-menu {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            padding: 20px;
-            background-color: white;
-            border: 2px solid #a80040;
-            border-radius: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffe6e6;
             display: none;
             text-align: center;
             z-index: 1000;
+            padding-top: 50px;
+        }
+
+        .boost-menu p {
+            font-size: 24px;
+            color: #a80040;
+            margin-bottom: 10px;
+        }
+
+        .boost-menu #balance {
+            font-size: 24px;
+            color: #a80040;
+            margin-left: 5px;
         }
 
         .boost-menu button {
@@ -125,10 +135,48 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
+            width: 100%;
         }
 
         .boost-menu button:hover {
             background-color: #900034;
+        }
+
+        .boost-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .boost-option {
+            background-color: #f2c6c6;
+            border: 2px solid #a80040;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            width: 80%;
+            max-width: 300px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .boost-option img {
+            width: 28px;
+            height: 28px;
+            margin-right: 10px;
+        }
+
+        .boost-option .details {
+            flex: 1;
+            text-align: left;
+        }
+
+        .boost-option .details span {
+            display: block;
+            font-size: 14px;
+            color: #a80040;
         }
 
         @keyframes fly {
@@ -171,10 +219,30 @@
     </div>
     
     <div class="boost-menu" id="boostMenu">
-        <p>Boost Options</p>
+        <p>Ваш баланс: <span id="balance">0</span></p>
+        <div class="score-wrapper">
+            <div class="score"><span id="scoreMenu">0</span></div>
+            <div class="heart-counter"></div>
+        </div>
+        <div class="boost-options">
+            <div class="boost-option">
+                <img src="multitap.png" alt="Multitap">
+                <div class="details">
+                    <span>Multitap lvl: 0</span>
+                    <span>Price: 500</span>
+                </div>
+                <button id="buyMultitap">Buy</button>
+            </div>
+            <div class="boost-option">
+                <img src="energy_limit.png" alt="Energy limit">
+                <div class="details">
+                    <span>Energy limit lvl: 0</span>
+                    <span>Price: 500</span>
+                </div>
+                <button id="buyEnergyLimit">Buy</button>
+            </div>
+        </div>
         <button id="closeBoostMenu">Close</button>
-        <button id="buyMultitap">Buy Multitap</button>
-        <button id="buyEnergyLimit">Buy Energy Limit</button>
     </div>
 
     <script>
@@ -185,12 +253,12 @@
         let energyLimitLevel = 0;
         let multitapCost = 500;
         let energyLimitCost = 500;
+        let balance = score; // Инициализируем balance
 
         const scoreDisplay = document.getElementById('score');
+        const scoreMenuDisplay = document.getElementById('scoreMenu');
         const currentEnergyDisplay = document.getElementById('currentEnergy');
         const maxEnergyDisplay = document.getElementById('maxEnergy');
-        const multitapLevelDisplay = document.getElementById('multitapLevel');
-        const energyLimitLevelDisplay = document.getElementById('energyLimitLevel');
         const boostButton = document.getElementById('boostButton');
         const boostMenu = document.getElementById('boostMenu');
         const closeBoostMenu = document.getElementById('closeBoostMenu');
@@ -215,12 +283,12 @@
                 : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
                 : score;
             scoreDisplay.innerText = formattedScore;
+            scoreMenuDisplay.innerText = formattedScore; // Обновляем и отображение баланса в меню бустов
         }
 
         function handleButtonClick(event) {
             event.preventDefault();
 
-            // Проверка на наличие энергии
             if (currentEnergy > 0) {
                 const buttonRect = clickButton.getBoundingClientRect();
                 let clickX, clickY;
@@ -241,10 +309,10 @@
 
                 tiltButton(event, buttonRect);
 
-                // Увеличение энергии на количество монеток, полученных за нажатие
                 updateEnergy(-(1 + multitapLevel));
 
-                updateAnotherCounter(score);
+                balance = score; // Обновляем баланс
+                updateBalanceDisplay(); // Обновляем отображение баланса в меню бустов
             }
         }
 
@@ -304,6 +372,8 @@
                 multitapLevel++;
                 multitapCost *= 2;
                 updateScoreDisplay();
+                balance = score; // Обновляем баланс
+                updateBalanceDisplay(); // Обновляем отображение баланса в меню бустов
             }
         }
 
@@ -312,9 +382,20 @@
                 score -= energyLimitCost;
                 energyLimitLevel++;
                 energyLimitCost *= 2;
-                updateEnergy(0); // Update energy display after buying energy limit
+                updateEnergy(0);
                 updateScoreDisplay();
+                balance = score; // Обновляем баланс
+                updateBalanceDisplay(); // Обновляем отображение баланса в меню бустов
             }
+        }
+
+        function updateAnotherCounter(score) {
+            document.getElementById('score').innerText = score;
+        }
+
+        function updateBalanceDisplay() {
+            const balanceDisplay = document.getElementById('balance');
+            balanceDisplay.textContent = balance; // Используем переменную balance, а не score
         }
 
         clickButton.addEventListener('click', handleButtonClick);
@@ -323,10 +404,6 @@
         closeBoostMenu.addEventListener('click', closeBoostMenuHandler);
         document.getElementById('buyMultitap').addEventListener('click', buyMultitapHandler);
         document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimitHandler);
-
-        function updateAnotherCounter(score) {
-            document.getElementById('score').innerText = score;
-        }
 
         setInterval(() => {
             if (currentEnergy < maxEnergy) {
