@@ -371,10 +371,12 @@
             if (score >= multitapCost) {
                 score -= multitapCost;
                 multitapLevel++;
-                multitapCost *= 2;
+                multitapCost *= 2; // Увеличиваем цену в два раза
                 updateScoreDisplay();
                 balance = score; // Обновляем баланс
                 updateBalanceDisplay(); // Обновляем отображение баланса в меню бустов
+                document.querySelector('.boost-option:nth-child(1) .details span:first-child').textContent = `Multitap lvl: ${multitapLevel}`;
+                document.querySelector('.boost-option:nth-child(1) .details span:last-child').textContent = `Price: ${multitapCost}`;
             }
         }
 
@@ -382,13 +384,16 @@
             if (score >= energyLimitCost) {
                 score -= energyLimitCost;
                 energyLimitLevel++;
-                energyLimitCost *= 2;
+                energyLimitCost *= 2; // Увеличиваем цену в два раза
                 updateEnergy(0);
                 updateScoreDisplay();
                 balance = score; // Обновляем баланс
                 updateBalanceDisplay(); // Обновляем отображение баланса в меню бустов
+                document.querySelector('.boost-option:nth-child(2) .details span:first-child').textContent = `Energy limit lvl: ${energyLimitLevel}`;
+                document.querySelector('.boost-option:nth-child(2) .details span:last-child').textContent = `Price: ${energyLimitCost}`;
             }
         }
+
 
         function updateAnotherCounter(score) {
             document.getElementById('score').innerText = score;
