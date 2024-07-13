@@ -117,19 +117,15 @@
         }
 
         .boost-menu button {
-            background-color: #a80040;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .boost-menu button:hover {
-            background-color: #900034;
+            position: absolute;
+            top: 20px; /* Отступ сверху */
+            right: 20px; /* Отступ справа */
+            font-weight: bold;
+            font-size: 24px; /* Увеличьте размер шрифта, если нужно */
+            color: #a80040; /* Цвет крестика */
+            background: none; /* Удаляем фон */
+            border: none; /* Убираем рамку */
+            cursor: pointer; /* Курсор при наведении */
         }
 
         .boost-options {
@@ -161,13 +157,6 @@
         .boost-option .details {
             flex: 1;
             text-align: left;
-        }
-
-        .boost-option button {
-            background-color: transparent; /* Удаляем фон */
-            border: none; /* Убираем рамку */
-            color: #a80040; /* Цвет текста кнопки */
-            cursor: pointer; /* Курсор при наведении */
         }
 
         .boost-info-modal {
@@ -257,7 +246,7 @@
                 <button class="show-info" data-info="energy_limit">></button>
             </div>
         </div>
-        <button id="closeBoostMenu">Закрыть</button>
+        <button id="closeBoostMenu">&times;</button>
     </div>
 
     <div class="boost-info-modal" id="boostInfoModal">
@@ -323,4 +312,3 @@
     </script>
 </body>
 </html>
-
