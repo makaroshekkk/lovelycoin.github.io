@@ -59,15 +59,6 @@
             background-size: cover;
         }
 
-        .heart {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background-image: url('heart.png');
-            background-size: cover;
-            animation: fly 1s linear;
-        }
-
         .counters {
             display: flex;
             justify-content: space-between;
@@ -93,14 +84,6 @@
             margin-right: 5px;
         }
 
-        .boost-counter img {
-            margin-right: 3px;
-        }
-
-        .boost-counter span {
-            margin-left: 3px;
-        }
-
         .boost-menu {
             position: fixed;
             top: 0;
@@ -120,10 +103,17 @@
             margin-bottom: 10px;
         }
 
+        .boost-menu div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .boost-menu #balance {
             font-size: 24px;
             color: #a80040;
             margin-left: 5px;
+            font-weight: bold;
         }
 
         .boost-menu button {
@@ -173,10 +163,35 @@
             text-align: left;
         }
 
-        .boost-option .details span {
-            display: block;
-            font-size: 14px;
-            color: #a80040;
+        .boost-option button {
+            background-color: transparent; /* Удаляем фон */
+            border: none; /* Убираем рамку */
+            color: #a80040; /* Цвет текста кнопки */
+            cursor: pointer; /* Курсор при наведении */
+        }
+
+        .boost-info-modal {
+            position: fixed;
+            bottom: -50%; /* Скрываем модальное окно */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%; /* Ширина модального окна */
+            max-width: 400px; /* Максимальная ширина */
+            background-color: #fff;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: none; /* Скрыто по умолчанию */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: bottom 0.3s ease;
+        }
+
+        .boost-info-modal.show {
+            display: flex; /* Показываем модальное окно */
+            bottom: 0; /* Показываем модальное окно */
         }
 
         @keyframes fly {
@@ -220,10 +235,9 @@
     
     <div class="boost-menu" id="boostMenu">
         <p>Ваш баланс:</p>
-        <span id="balance" style="font-weight: bold; font-size: 40px;">0</span>
-        <div class="score-wrapper">
-            <div class="score"><span id="scoreMenu">0</span></div>
-            <div class="heart-counter"></div>
+        <div style="display: flex; align-items: center;">
+            <span id="balance" style="font-weight: bold; font-size: 40px;">0</span>
+            <img src="heart_counter.png" alt="Счетчик сердец" style="width: 40px; height: 40px; margin-left: 5px;">
         </div>
         <div class="boost-options">
             <div class="boost-option">
@@ -232,7 +246,7 @@
                     <span>Multitap lvl: 0</span>
                     <span>Price: 500</span>
                 </div>
-                <button id="buyMultitap">Buy</button>
+                <button class="show-info" data-info="multitap">></button>
             </div>
             <div class="boost-option">
                 <img src="energy_limit.png" alt="Energy limit">
@@ -240,183 +254,73 @@
                     <span>Energy limit lvl: 0</span>
                     <span>Price: 500</span>
                 </div>
-                <button id="buyEnergyLimit">Buy</button>
+                <button class="show-info" data-info="energy_limit">></button>
             </div>
         </div>
-        <button id="closeBoostMenu">Close</button>
+        <button id="closeBoostMenu">Закрыть</button>
+    </div>
+
+    <div class="boost-info-modal" id="boostInfoModal">
+        <h3 id="boostTitle"></h3>
+        <p id="boostDescription"></p>
+        <button id="closeBoostInfoModal">Закрыть</button>
     </div>
 
     <script>
+        // JavaScript для функциональности игры и бустов
         let score = 0;
+        let balance = 0;
         let currentEnergy = 1000;
         let maxEnergy = 1000;
-        let multitapLevel = 0;
-        let energyLimitLevel = 0;
-        let multitapCost = 500;
-        let energyLimitCost = 500;
-        let balance = score; // Инициализируем balance
 
-        const scoreDisplay = document.getElementById('score');
-        const scoreMenuDisplay = document.getElementById('scoreMenu');
-        const currentEnergyDisplay = document.getElementById('currentEnergy');
-        const maxEnergyDisplay = document.getElementById('maxEnergy');
-        const boostButton = document.getElementById('boostButton');
-        const boostMenu = document.getElementById('boostMenu');
-        const closeBoostMenu = document.getElementById('closeBoostMenu');
-        const clickButton = document.getElementById('clickButton');
-        const gameContainer = document.querySelector('.game-container');
-
-        function updateEnergy(amount) {
-            currentEnergy += amount;
-            const newMaxEnergy = 1000 + energyLimitLevel * 500;
-            maxEnergy = newMaxEnergy;
-            if (currentEnergy > maxEnergy) {
-                currentEnergy = maxEnergy;
-            } else if (currentEnergy < 0) {
-                currentEnergy = 0;
-            }
-            currentEnergyDisplay.textContent = currentEnergy;
-            maxEnergyDisplay.textContent = maxEnergy;
-        }
-
-        function updateScoreDisplay() {
-            const formattedScore = score >= 1000000 ? (score / 1000000).toFixed(2).replace(/\.00$/, '') + 'М'
-                : score >= 1000 ? (score / 1000).toFixed(2).replace(/\.00$/, '') + 'K'
-                : score;
-            scoreDisplay.innerText = formattedScore;
-            scoreMenuDisplay.innerText = formattedScore; // Обновляем и отображение баланса в меню бустов
-        }
-
-        function handleButtonClick(event) {
-            event.preventDefault();
-
-            if (currentEnergy > 0) {
-                const buttonRect = clickButton.getBoundingClientRect();
-                let clickX, clickY;
-
-                if (event.type === 'click') {
-                    clickX = event.clientX - buttonRect.left;
-                    clickY = event.clientY - buttonRect.top;
-                } else if (event.type === 'touchstart') {
-                    const touch = event.touches[0];
-                    clickX = touch.clientX - buttonRect.left;
-                    clickY = touch.clientY - buttonRect.top;
-                }
-
-                createHeartAnimation(clickX, clickY);
-
-                score += 1 + multitapLevel;
-                updateScoreDisplay();
-
-                tiltButton(event, buttonRect);
-
-                updateEnergy(-(1 + multitapLevel));
-
-                balance = score; // Обновляем баланс
-                updateBalanceDisplay(); // Обновляем отображение баланса в меню бустов
-            }
-        }
-
-        function createHeartAnimation(clickX, clickY) {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.style.left = `${clickX - 20}px`;
-            heart.style.top = `${clickY - 20}px`;
-            gameContainer.appendChild(heart);
-
-            heart.addEventListener('animationend', () => {
-                heart.remove();
-            });
-        }
-
-        function tiltButton(event, buttonRect) {
-            const button = clickButton;
-            const centerX = buttonRect.width / 2;
-            const centerY = buttonRect.height / 2;
-
-            let clientX, clientY;
-
-            if (event.type === 'click') {
-                clientX = event.clientX;
-                clientY = event.clientY;
-            } else if (event.type === 'touchstart') {
-                const touch = event.touches[0];
-                clientX = touch.clientX;
-                clientY = touch.clientY;
-            }
-
-            const angleX = (clientX - buttonRect.left - centerX) / 8;
-            const angleY = (clientY - buttonRect.top - centerY) / 8;
-
-            button.style.transform = `perspective(1000px) rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
-
-            setTimeout(() => {
-                button.style.transform = 'none';
-            }, 300);
-        }
-
-        function toggleBoostMenu() {
-            if (boostMenu.style.display === 'none' || boostMenu.style.display === '') {
-                boostMenu.style.display = 'block';
-            } else {
-                boostMenu.style.display = 'none';
-            }
-        }
-
-        function closeBoostMenuHandler() {
-            boostMenu.style.display = 'none';
-        }
-
-        function buyMultitapHandler() {
-            if (score >= multitapCost) {
-                score -= multitapCost;
-                multitapLevel++;
-                multitapCost *= 2; // Увеличиваем цену в два раза
-                updateScoreDisplay();
-                balance = score; // Обновляем баланс
-                updateBalanceDisplay(); // Обновляем отображение баланса в меню бустов
-                document.querySelector('.boost-option:nth-child(1) .details span:first-child').textContent = `Multitap lvl: ${multitapLevel}`;
-                document.querySelector('.boost-option:nth-child(1) .details span:last-child').textContent = `Price: ${multitapCost}`;
-            }
-        }
-
-        function buyEnergyLimitHandler() {
-            if (score >= energyLimitCost) {
-                score -= energyLimitCost;
-                energyLimitLevel++;
-                energyLimitCost *= 2; // Увеличиваем цену в два раза
-                updateEnergy(0);
-                updateScoreDisplay();
-                balance = score; // Обновляем баланс
-                updateBalanceDisplay(); // Обновляем отображение баланса в меню бустов
-                document.querySelector('.boost-option:nth-child(2) .details span:first-child').textContent = `Energy limit lvl: ${energyLimitLevel}`;
-                document.querySelector('.boost-option:nth-child(2) .details span:last-child').textContent = `Price: ${energyLimitCost}`;
-            }
-        }
-
-
-        function updateAnotherCounter(score) {
+        document.getElementById('clickButton').addEventListener('click', function() {
+            score++;
+            balance += 1; // Каждое нажатие увеличивает баланс
             document.getElementById('score').innerText = score;
-        }
+            document.getElementById('balance').innerText = balance;
+            document.getElementById('currentEnergy').innerText = currentEnergy;
+            document.getElementById('maxEnergy').innerText = maxEnergy;
+        });
 
-        function updateBalanceDisplay() {
-            const balanceDisplay = document.getElementById('balance');
-            balanceDisplay.textContent = balance; // Используем переменную balance, а не score
-        }
+        document.getElementById('boostButton').addEventListener('click', function() {
+            document.getElementById('boostMenu').style.display = 'block';
+        });
 
-        clickButton.addEventListener('click', handleButtonClick);
-        clickButton.addEventListener('touchstart', handleButtonClick);
-        boostButton.addEventListener('click', toggleBoostMenu);
-        closeBoostMenu.addEventListener('click', closeBoostMenuHandler);
-        document.getElementById('buyMultitap').addEventListener('click', buyMultitapHandler);
-        document.getElementById('buyEnergyLimit').addEventListener('click', buyEnergyLimitHandler);
+        document.getElementById('closeBoostMenu').addEventListener('click', function() {
+            document.getElementById('boostMenu').style.display = 'none';
+        });
 
-        setInterval(() => {
-            if (currentEnergy < maxEnergy) {
-                currentEnergy++;
-                currentEnergyDisplay.textContent = currentEnergy;
+        document.querySelectorAll('.show-info').forEach(button => {
+            button.addEventListener('click', function() {
+                const infoType = this.getAttribute('data-info');
+                showBoostInfo(infoType);
+            });
+        });
+
+        function showBoostInfo(infoType) {
+            let title, description;
+
+            if (infoType === 'multitap') {
+                title = 'Multitap';
+                description = 'Увеличивает скорость нажатия на кнопку.';
+            } else if (infoType === 'energy_limit') {
+                title = 'Energy Limit';
+                description = 'Увеличивает максимальный лимит энергии.';
             }
-        }, 1000);
+
+            document.getElementById('boostTitle').innerText = title;
+            document.getElementById('boostDescription').innerText = description;
+
+            const modal = document.getElementById('boostInfoModal');
+            modal.classList.add('show');
+            modal.style.display = 'flex'; // Показываем модальное окно
+
+            document.getElementById('closeBoostInfoModal').onclick = function() {
+                modal.classList.remove('show');
+                modal.style.display = 'none'; // Скрываем модальное окно
+            };
+        }
     </script>
 </body>
 </html>
+
