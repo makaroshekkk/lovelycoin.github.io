@@ -31,18 +31,21 @@
 
     <script>
         document.getElementById('get-score-button').addEventListener('click', function() {
+            // Получение user_id из контекста бота (добавьте соответствующий код)
+            const user_id = 'ВАШ_USER_ID'; // Замена на реальный user_id
+
             // Запрос к серверу
             fetch('/start', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_id: 'ВАШ_USER_ID' }) // Замена на реальный user_id
+                body: JSON.stringify({ user_id: user_id })
             })
             .then(response => response.json())
             .then(data => {
                 // Обновление очков
-                document.getElementById('score').textContent = `Ваши очки: ${data.age}`;
+                document.getElementById('score').textContent = `Ваши очки: ${data.score}`;
             })
             .catch(error => console.error('Ошибка:', error));
         });
