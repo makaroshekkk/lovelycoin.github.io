@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lovely Coin Game</title>
+    <title>Age-Based Score Game</title>
     <style>
         body {
             display: flex;
@@ -12,45 +12,40 @@
             justify-content: center;
             height: 100vh;
             background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
-        #coinCounter {
-            font-size: 24px;
+        #score {
+            font-size: 2em;
             margin-bottom: 20px;
         }
-        button {
+        #get-score-button {
             padding: 10px 20px;
-            font-size: 18px;
+            font-size: 1em;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div id="coinCounter">Coins: 0</div>
-    <button onclick="collectCoins()">Collect Coins</button>
+    <div id="score">Ваши очки: 0</div>
+    <button id="get-score-button">Получить очки</button>
 
     <script>
-        // Пример даты создания аккаунта пользователя (формат YYYY-MM-DD)
-        const accountCreationDate = '2020-01-01';
-
-        function calculateAccountAge(creationDate) {
-            const creationDateObj = new Date(creationDate);
-            const currentDate = new Date();
-            const diffTime = Math.abs(currentDate - creationDateObj);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
-        }
-
-        function calculateCoins(accountAge) {
-            return Math.floor(accountAge / 365);  // 1 монета за каждый полный год
-        }
-
-        function collectCoins() {
-            const accountAge = calculateAccountAge(accountCreationDate);
-            const coins = calculateCoins(accountAge);
-            document.getElementById('coinCounter').textContent = `Coins: ${coins}`;
-        }
-
-        // Начальное вычисление и отображение монет
-        collectCoins();
+        document.getElementById('get-score-button').addEventListener('click', function() {
+            // Запрос к серверу
+            fetch('/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: 'ВАШ_USER_ID' }) // Замена на реальный user_id
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Обновление очков
+                document.getElementById('score').textContent = `Ваши очки: ${data.age}`;
+            })
+            .catch(error => console.error('Ошибка:', error));
+        });
     </script>
 </body>
 </html>
