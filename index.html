@@ -1,314 +1,56 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LovelyCoin</title>
+    <title>Lovely Coin Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-            margin: 0;
-            background-color: #ffe6e6;
+            background-color: #f0f0f0;
         }
-
-        .game-container {
-            text-align: center;
-            position: relative;
-            margin-top: 20px;
+        #coinCounter {
+            font-size: 24px;
+            margin-bottom: 20px;
         }
-
-        .game-container img {
-            width: 325px;
-            height: 325px;
-            cursor: pointer;
-            border: none;
-            outline: none;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            -webkit-user-select: none;
-            user-select: none;
-            transition: transform 0.2s ease;
-        }
-
-        .game-container img:active {
-            transform: scale(0.98);
-        }
-
-        .score-wrapper {
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-        }
-
-        .score {
-            font-size: 36px;
-            color: #a80040;
-        }
-
-        .heart-counter {
-            width: 40px;
-            height: 40px;
-            margin-left: 5px;
-            background-image: url('heart_counter.png');
-            background-size: cover;
-        }
-
-        .counters {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .energy-counter, .boost-counter {
+        button {
+            padding: 10px 20px;
             font-size: 18px;
-            color: #a80040;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 10px;
-            border: 2px solid #f2c6c6;
-            background-color: #f2c6c6;
-            border-radius: 15px;
-        }
-
-        .energy-counter img, .boost-counter img {
-            width: 28px;
-            height: 28px;
-            margin-right: 5px;
-        }
-
-        .boost-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #ffe6e6;
-            display: none;
-            text-align: center;
-            z-index: 1000;
-            padding-top: 50px;
-        }
-
-        .boost-menu p {
-            font-size: 24px;
-            color: #a80040;
-            margin-bottom: 10px;
-        }
-
-        .boost-menu div {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .boost-menu #balance {
-            font-size: 24px;
-            color: #a80040;
-            margin-left: 5px;
-            font-weight: bold;
-        }
-
-        .boost-menu button {
-            position: absolute;
-            top: 20px; /* Отступ сверху */
-            right: 20px; /* Отступ справа */
-            font-weight: bold;
-            font-size: 24px; /* Увеличьте размер шрифта, если нужно */
-            color: #a80040; /* Цвет крестика */
-            background: none; /* Удаляем фон */
-            border: none; /* Убираем рамку */
-            cursor: pointer; /* Курсор при наведении */
-        }
-
-        .boost-options {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .boost-option {
-            background-color: #f2c6c6;
-            border: 2px solid #a80040;
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 10px;
-            width: 80%;
-            max-width: 300px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .boost-option img {
-            width: 28px;
-            height: 28px;
-            margin-right: 10px;
-        }
-
-        .boost-option .details {
-            flex: 1;
-            text-align: left;
-        }
-
-        .boost-info-modal {
-            position: fixed;
-            bottom: -50%; /* Скрываем модальное окно */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%; /* Ширина модального окна */
-            max-width: 400px; /* Максимальная ширина */
-            background-color: #fff;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            display: none; /* Скрыто по умолчанию */
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            transition: bottom 0.3s ease;
-        }
-
-        .boost-info-modal.show {
-            display: flex; /* Показываем модальное окно */
-            bottom: 0; /* Показываем модальное окно */
-        }
-
-        @keyframes fly {
-            0% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-300px);
-                opacity: 0;
-            }
-        }
-
-        * {
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="score-wrapper">
-            <div class="score"><span id="score">0</span></div>
-            <div class="heart-counter"></div>
-        </div>
-        <img src="1.png" id="clickButton" alt="Кнопка">
-        <div class="counters">
-            <div class="energy-counter">
-                <img src="energy.png" alt="Энергия"> <span id="currentEnergy">1000</span>/<span id="maxEnergy">1000</span>
-            </div>
-            <div class="boost-counter" id="boostButton">
-                <img src="boost.png" alt="Boost">
-                <span>Boost</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="boost-menu" id="boostMenu">
-        <p>Ваш баланс:</p>
-        <div style="display: flex; align-items: center;">
-            <span id="balance" style="font-weight: bold; font-size: 40px;">0</span>
-            <img src="heart_counter.png" alt="Счетчик сердец" style="width: 40px; height: 40px; margin-left: 5px;">
-        </div>
-        <div class="boost-options">
-            <div class="boost-option">
-                <img src="multitap.png" alt="Multitap">
-                <div class="details">
-                    <span>Multitap lvl: 0</span>
-                    <span>Price: 500</span>
-                </div>
-                <button class="show-info" data-info="multitap">></button>
-            </div>
-            <div class="boost-option">
-                <img src="energy_limit.png" alt="Energy limit">
-                <div class="details">
-                    <span>Energy limit lvl: 0</span>
-                    <span>Price: 500</span>
-                </div>
-                <button class="show-info" data-info="energy_limit">></button>
-            </div>
-        </div>
-        <button id="closeBoostMenu">&times;</button>
-    </div>
-
-    <div class="boost-info-modal" id="boostInfoModal">
-        <h3 id="boostTitle"></h3>
-        <p id="boostDescription"></p>
-        <button id="closeBoostInfoModal">Закрыть</button>
-    </div>
+    <div id="coinCounter">Coins: 0</div>
+    <button onclick="collectCoins()">Collect Coins</button>
 
     <script>
-        // JavaScript для функциональности игры и бустов
-        let score = 0;
-        let balance = 0;
-        let currentEnergy = 1000;
-        let maxEnergy = 1000;
+        // Пример даты создания аккаунта пользователя (формат YYYY-MM-DD)
+        const accountCreationDate = '2020-01-01';
 
-        document.getElementById('clickButton').addEventListener('click', function() {
-            score++;
-            balance += 1; // Каждое нажатие увеличивает баланс
-            document.getElementById('score').innerText = score;
-            document.getElementById('balance').innerText = balance;
-            document.getElementById('currentEnergy').innerText = currentEnergy;
-            document.getElementById('maxEnergy').innerText = maxEnergy;
-        });
-
-        document.getElementById('boostButton').addEventListener('click', function() {
-            document.getElementById('boostMenu').style.display = 'block';
-        });
-
-        document.getElementById('closeBoostMenu').addEventListener('click', function() {
-            document.getElementById('boostMenu').style.display = 'none';
-        });
-
-        document.querySelectorAll('.show-info').forEach(button => {
-            button.addEventListener('click', function() {
-                const infoType = this.getAttribute('data-info');
-                showBoostInfo(infoType);
-            });
-        });
-
-        function showBoostInfo(infoType) {
-            let title, description;
-
-            if (infoType === 'multitap') {
-                title = 'Multitap';
-                description = 'Увеличивает скорость нажатия на кнопку.';
-            } else if (infoType === 'energy_limit') {
-                title = 'Energy Limit';
-                description = 'Увеличивает максимальный лимит энергии.';
-            }
-
-            document.getElementById('boostTitle').innerText = title;
-            document.getElementById('boostDescription').innerText = description;
-
-            const modal = document.getElementById('boostInfoModal');
-            modal.classList.add('show');
-            modal.style.display = 'flex'; // Показываем модальное окно
-
-            document.getElementById('closeBoostInfoModal').onclick = function() {
-                modal.classList.remove('show');
-                modal.style.display = 'none'; // Скрываем модальное окно
-            };
+        function calculateAccountAge(creationDate) {
+            const creationDateObj = new Date(creationDate);
+            const currentDate = new Date();
+            const diffTime = Math.abs(currentDate - creationDateObj);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
         }
+
+        function calculateCoins(accountAge) {
+            return Math.floor(accountAge / 365);  // 1 монета за каждый полный год
+        }
+
+        function collectCoins() {
+            const accountAge = calculateAccountAge(accountCreationDate);
+            const coins = calculateCoins(accountAge);
+            document.getElementById('coinCounter').textContent = `Coins: ${coins}`;
+        }
+
+        // Начальное вычисление и отображение монет
+        collectCoins();
     </script>
 </body>
 </html>
