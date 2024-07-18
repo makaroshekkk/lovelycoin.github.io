@@ -129,6 +129,11 @@
     </div>
 
     <script>
+
+        window.onload = function() {
+            document.getElementById('welcomeModal').style.display = 'flex';
+            Telegram.WebApp.expand();
+        }
         // Mock function to simulate adding coins to balance
         let coins = 0;
 
