@@ -129,16 +129,12 @@
     </div>
 
     <script>
-
-        window.onload = function() {
-            document.getElementById('welcomeModal').style.display = 'flex';
-            Telegram.WebApp.expand();
-        }
         // Mock function to simulate adding coins to balance
         let coins = 0;
 
         window.onload = function() {
             document.getElementById('welcomeModal').style.display = 'flex';
+            Telegram.WebApp.expand(); // Expand to fullscreen
         }
 
         function claimBonus() {
@@ -151,5 +147,6 @@
             document.querySelector('.coins').textContent = coins + ' MASKS';
         }
     </script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
 </html>
