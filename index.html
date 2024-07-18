@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>MASK</title>
+    <title>Mobile Page</title>
     <style>
         html, body {
             width: 100%;
@@ -121,17 +121,16 @@
     <div id="welcomeModal" class="modal">
         <div class="modal-content">
             <h2>Welcome bonus</h2>
-            <p>+5000 MASKS</p>
+            <p>+5000 MASKs</p>
             <button onclick="claimBonus()">Claim</button>
         </div>
     </div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         window.onload = function() {
             document.getElementById('welcomeModal').style.display = 'flex';
-            if (window.Telegram.WebApp.initData) {
-                Telegram.WebApp.expand();
-            }
+            Telegram.WebApp.expand();
         }
 
         function claimBonus() {
