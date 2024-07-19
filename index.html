@@ -159,6 +159,7 @@
         <button onclick="showHome()">Домой</button>
         <button onclick="showLeaderboard()">Таблица лидеров</button>
         <button onclick="clearContent()">Друзья</button>
+        <button onclick="resetAllData()">Сбросить все данные</button>
     </div>
 
     <div id="welcomeModal" class="modal">
@@ -251,6 +252,18 @@
             const savedLeaderboard = localStorage.getItem('leaderboard');
             if (savedLeaderboard) {
                 leaderboard = JSON.parse(savedLeaderboard);
+            }
+        }
+
+        function resetAllData() {
+            if (confirm("Вы уверены, что хотите сбросить все данные? Это действие невозможно отменить.")) {
+                localStorage.removeItem('coins');
+                localStorage.removeItem('leaderboard');
+                coins = 0;
+                leaderboard = [];
+                updateCoins();
+                showHome();
+                alert("Все данные были сброшены.");
             }
         }
     </script>
