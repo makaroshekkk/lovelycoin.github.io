@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>MasK???</title>
+    <title>Mask???</title>
     <style>
         html, body {
             width: 100%;
@@ -25,8 +25,8 @@
         .content {
             flex: 1;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            align-items: flex-start;
             text-align: center;
             padding: 20px;
             background: rgba(0, 0, 0, 0.5);
@@ -112,18 +112,11 @@
             background-color: #444;
         }
         .leaderboard {
+            text-align: left;
             margin-top: 20px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            width: 100%;
-            max-width: 600px;
         }
         .leaderboard h3 {
-            margin-top: 0;
-            font-size: 24px;
-            border-bottom: 2px solid #fff;
-            padding-bottom: 10px;
+            margin-bottom: 10px;
         }
         .leaderboard ul {
             list-style: none;
@@ -131,22 +124,12 @@
             margin: 0;
         }
         .leaderboard li {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
             padding: 10px;
             margin: 5px 0;
             border-radius: 5px;
             display: flex;
             justify-content: space-between;
-            font-size: 18px;
-        }
-        .leaderboard li span {
-            display: inline-block;
-        }
-        .leaderboard li span.name {
-            font-weight: bold;
-        }
-        .leaderboard li span.coins {
-            font-weight: normal;
         }
         @keyframes fadeIn {
             from {background-color: rgba(0, 0, 0, 0);}
@@ -224,12 +207,12 @@
 
         function showLeaderboard() {
             updateLeaderboard();
-            document.getElementById('mainContent').innerHTML = `
+            document.getElementById('mainContent').innerHTML = 
                 <div class="coins">${coins} MASKS</div>
-                <div class="leaderboard" id="leaderboard">
+                <div class="leaderboard">
                     <h3>Таблица лидеров</h3>
                     <ul id="leaderboardList"></ul>
-                </div>`;
+                </div>;
             renderLeaderboard();
         }
 
@@ -249,7 +232,7 @@
             leaderboardList.innerHTML = '';
             leaderboard.forEach(entry => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span class="name">${entry.username}</span><span class="coins">${entry.coins} MASKS</span>`;
+                li.innerHTML = <span>${entry.username}</span><span>${entry.coins} MASKS</span>;
                 leaderboardList.appendChild(li);
             });
         }
