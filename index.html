@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>Mask???</title>
+    <title>MasK???</title>
     <style>
         html, body {
             width: 100%;
@@ -18,18 +18,26 @@
             flex-direction: column;
             background-color: #000;
             color: #fff;
+            background-image: url('bg.jpg');
+            background-size: cover;
+            background-position: center;
         }
         .content {
             flex: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Align items at the top */
             text-align: center;
             padding: 20px;
+            background: rgba(0, 0, 0, 0.5); /* Add a semi-transparent layer */
         }
         .coins {
-            font-size: 24px;
+            font-size: 36px; /* Larger font size */
             font-weight: bold;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            padding: 10px 20px;
+            border-radius: 10px; /* Rounded corners */
+            margin-top: 20px; /* Add some margin from the top */
         }
         .navbar {
             display: flex;
@@ -117,6 +125,21 @@
                 opacity: 1;
             }
         }
+        .leaderboard {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: left;
+        }
+        .leaderboard h3 {
+            margin-top: 0;
+        }
+        .leaderboard ol {
+            padding-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -125,7 +148,7 @@
     </div>
     <div class="navbar">
         <button onclick="showHome()">Home</button>
-        <button onclick="clearContent()">Leaderboard</button>
+        <button onclick="showLeaderboard()">Leaderboard</button>
         <button onclick="clearContent()">Friends</button>
     </div>
 
@@ -150,6 +173,7 @@
             coins += 5000; // Add 5000 MASKS to coins
             document.getElementById('welcomeModal').style.display = 'none';
             updateCoins(); // Update displayed coins
+            saveScore(); // Save the score in leaderboard
         }
 
         function updateCoins() {
@@ -162,6 +186,31 @@
 
         function showHome() {
             document.getElementById('mainContent').innerHTML = '<div class="coins">' + coins + ' MASKS</div>'; // Show the coins counter
+        }
+
+        function showLeaderboard() {
+            let leaderboard = getLeaderboard();
+            let leaderboardHtml = '<div class="leaderboard"><h3>Leaderboard</h3><ol>';
+            leaderboard.forEach(function(score) {
+                leaderboardHtml += '<li>' + score + ' MASKS</li>';
+            });
+            leaderboardHtml += '</ol></div>';
+            document.getElementById('mainContent').innerHTML = leaderboardHtml;
+        }
+
+        function saveScore() {
+            let leaderboard = getLeaderboard();
+            leaderboard.push(coins);
+            leaderboard.sort(function(a, b) { return b - a; });
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        }
+
+        function getLeaderboard() {
+            let leaderboard = localStorage.getItem('leaderboard');
+            if (leaderboard) {
+                return JSON.parse(leaderboard);
+            }
+            return [];
         }
     </script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
