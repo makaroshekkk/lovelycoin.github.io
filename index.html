@@ -138,6 +138,14 @@
         .leaderboard li:nth-child(2)::before { content: "🥈"; }
         .leaderboard li:nth-child(3)::before { content: "🥉"; }
         .leaderboard li:nth-child(n+4)::before { content: "#"; }
+        .leaderboard li span {
+            display: inline-block;
+            width: 50%;
+            text-align: left;
+        }
+        .leaderboard li span:last-child {
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -202,7 +210,6 @@
         function showLeaderboard() {
             updateLeaderboard();
             document.getElementById('mainContent').innerHTML = `
-                <div class="coins">${coins} MASKS</div>
                 <div class="leaderboard" id="leaderboard">
                     <h3>Ваше место: <span id="userRank">#</span></h3>
                     <h3>Лидерборд</h3>
