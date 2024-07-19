@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>Mask???</title>
+    <title>MasK???</title>
     <style>
         html, body {
             width: 100%;
@@ -111,26 +111,6 @@
         .modal-content button:hover {
             background-color: #444;
         }
-        .leaderboard {
-            text-align: left;
-            margin-top: 20px;
-        }
-        .leaderboard h3 {
-            margin-bottom: 10px;
-        }
-        .leaderboard ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .leaderboard li {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
         @keyframes fadeIn {
             from {background-color: rgba(0, 0, 0, 0);}
             to {background-color: rgba(0, 0, 0, 0.4);}
@@ -145,51 +125,64 @@
                 opacity: 1;
             }
         }
+        .leaderboard {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            text-align: left;
+        }
+        .leaderboard h2 {
+            margin-top: 0;
+        }
+        .leaderboard ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .leaderboard li {
+            margin: 10px 0;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <div class="content" id="mainContent">
         <div class="coins">0 MASKS</div>
-        <div class="leaderboard" id="leaderboard" style="display: none;">
-            <h3>Таблица лидеров</h3>
-            <ul id="leaderboardList"></ul>
-        </div>
     </div>
     <div class="navbar">
-        <button onclick="showHome()">Домой</button>
-        <button onclick="showLeaderboard()">Таблица лидеров</button>
-        <button onclick="clearContent()">Друзья</button>
+        <button onclick="showHome()">Home</button>
+        <button onclick="showLeaderboard()">Leaderboard</button>
+        <button onclick="clearContent()">Friends</button>
     </div>
 
     <div id="welcomeModal" class="modal">
         <div class="modal-content">
-            <h2>Приветственный бонус</h2>
+            <h2>Welcome bonus</h2>
             <p>+5000 MASKS</p>
-            <button onclick="claimBonus()">Получить</button>
+            <button onclick="claimBonus()">Claim</button>
         </div>
     </div>
 
     <script>
+        // Mock function to simulate adding coins to balance
         let coins = 0;
-        let username = '';
-        let leaderboard = [];
+        const leaderboard = [
+            {name: 'Алексей Иванов', score: 7000},
+            {name: 'Ирина Петрова', score: 5000},
+            {name: 'Олег Сидоров', score: 3000},
+            {name: 'Мария Кузнецова', score: 2000}
+        ];
 
         window.onload = function() {
-            Telegram.WebApp.ready();
-            const user = Telegram.WebApp.initDataUnsafe.user;
-            if (user) {
-                username = user.username || user.first_name;
-            }
-            loadProgress();
             document.getElementById('welcomeModal').style.display = 'flex';
-            Telegram.WebApp.expand(); // Развернуть на весь экран
+            Telegram.WebApp.expand(); // Expand to fullscreen
         }
 
         function claimBonus() {
-            coins += 5000;
+            coins += 5000; // Add 5000 MASKS to coins
             document.getElementById('welcomeModal').style.display = 'none';
-            saveProgress();
-            updateCoins();
+            updateCoins(); // Update displayed coins
         }
 
         function updateCoins() {
@@ -197,61 +190,25 @@
         }
 
         function clearContent() {
-            document.getElementById('mainContent').innerHTML = '';
+            document.getElementById('mainContent').innerHTML = ''; // Clear the main content area
         }
 
         function showHome() {
-            document.getElementById('mainContent').innerHTML = '<div class="coins">' + coins + ' MASKS</div>';
-            updateCoins();
+            document.getElementById('mainContent').innerHTML = '<div class="coins">' + coins + ' MASKS</div>'; // Show the coins counter
         }
 
         function showLeaderboard() {
-            updateLeaderboard();
+            const leaderboardHtml = leaderboard
+                .sort((a, b) => b.score - a.score) // Sort by score descending
+                .map(entry => `<li>${entry.name}: ${entry.score} MASKS</li>`)
+                .join('');
+
             document.getElementById('mainContent').innerHTML = `
-                <div class="coins">${coins} MASKS</div>
                 <div class="leaderboard">
-                    <h3>Таблица лидеров</h3>
-                    <ul id="leaderboardList"></ul>
-                </div>`;
-            renderLeaderboard();
-        }
-
-        function updateLeaderboard() {
-            const userEntry = leaderboard.find(entry => entry.username === username);
-            if (userEntry) {
-                userEntry.coins = coins;
-            } else {
-                leaderboard.push({ username: username, coins: coins });
-            }
-            leaderboard.sort((a, b) => b.coins - a.coins);
-            saveProgress();
-        }
-
-        function renderLeaderboard() {
-            const leaderboardList = document.getElementById('leaderboardList');
-            leaderboardList.innerHTML = '';
-            leaderboard.forEach(entry => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span>${entry.username}</span><span>${entry.coins} MASKS</span>`;
-                leaderboardList.appendChild(li);
-            });
-        }
-
-        function saveProgress() {
-            localStorage.setItem('coins', coins);
-            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-        }
-
-        function loadProgress() {
-            const savedCoins = localStorage.getItem('coins');
-            if (savedCoins) {
-                coins = parseInt(savedCoins, 10);
-                updateCoins();
-            }
-            const savedLeaderboard = localStorage.getItem('leaderboard');
-            if (savedLeaderboard) {
-                leaderboard = JSON.parse(savedLeaderboard);
-            }
+                    <h2>Leaderboard</h2>
+                    <ul>${leaderboardHtml}</ul>
+                </div>
+            `;
         }
     </script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
