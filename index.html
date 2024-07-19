@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>MasK???</title>
+    <title>Mask???</title>
     <style>
         html, body {
             width: 100%;
@@ -159,7 +159,6 @@
         <button onclick="showHome()">Домой</button>
         <button onclick="showLeaderboard()">Таблица лидеров</button>
         <button onclick="clearContent()">Друзья</button>
-        <button onclick="resetAllData()">Сбросить все данные</button>
     </div>
 
     <div id="welcomeModal" class="modal">
@@ -208,12 +207,12 @@
 
         function showLeaderboard() {
             updateLeaderboard();
-            document.getElementById('mainContent').innerHTML = `
+            document.getElementById('mainContent').innerHTML = 
                 <div class="coins">${coins} MASKS</div>
                 <div class="leaderboard">
                     <h3>Таблица лидеров</h3>
                     <ul id="leaderboardList"></ul>
-                </div>`;
+                </div>;
             renderLeaderboard();
         }
 
@@ -233,7 +232,7 @@
             leaderboardList.innerHTML = '';
             leaderboard.forEach(entry => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span>${entry.username}</span><span>${entry.coins} MASKS</span>`;
+                li.innerHTML = <span>${entry.username}</span><span>${entry.coins} MASKS</span>;
                 leaderboardList.appendChild(li);
             });
         }
@@ -252,18 +251,6 @@
             const savedLeaderboard = localStorage.getItem('leaderboard');
             if (savedLeaderboard) {
                 leaderboard = JSON.parse(savedLeaderboard);
-            }
-        }
-
-        function resetAllData() {
-            if (confirm("Вы уверены, что хотите сбросить все данные? Это действие невозможно отменить.")) {
-                localStorage.removeItem('coins');
-                localStorage.removeItem('leaderboard');
-                coins = 0;
-                leaderboard = [];
-                updateCoins();
-                showHome();
-                alert("Все данные были сброшены.");
             }
         }
     </script>
