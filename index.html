@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>Mask???</title>
+    <title>MasK???</title>
     <style>
         html, body {
             width: 100%;
@@ -34,21 +34,30 @@
         .navbar {
             display: flex;
             justify-content: space-around;
-            background-color: #fff;
-            color: #000;
+            background-color: #1a1a1a;
+            color: #fff;
             padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
         }
         .navbar button {
-            background-color: #000;
+            background-color: #333;
             color: #fff;
             border: none;
             padding: 15px;
             font-size: 16px;
             flex: 1;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 0 5px;
+            border-radius: 5px;
         }
         .navbar button:hover {
-            background-color: #ccc;
+            background-color: #555;
+            transform: scale(1.05);
+        }
+        .navbar button:active {
+            background-color: #777;
+            transform: scale(0.95);
         }
         .modal {
             display: none;
@@ -111,13 +120,13 @@
     </style>
 </head>
 <body>
-    <div class="content">
+    <div class="content" id="mainContent">
         <div class="coins">0 MASKS</div>
     </div>
     <div class="navbar">
-        <button onclick="alert('Home clicked')">Home</button>
-        <button onclick="alert('Leaderboard clicked')">Leaderboard</button>
-        <button onclick="alert('Friends clicked')">Friends</button>
+        <button onclick="showHome()">Home</button>
+        <button onclick="clearContent()">Leaderboard</button>
+        <button onclick="clearContent()">Friends</button>
     </div>
 
     <div id="welcomeModal" class="modal">
@@ -145,6 +154,14 @@
 
         function updateCoins() {
             document.querySelector('.coins').textContent = coins + ' MASKS';
+        }
+
+        function clearContent() {
+            document.getElementById('mainContent').innerHTML = ''; // Clear the main content area
+        }
+
+        function showHome() {
+            document.getElementById('mainContent').innerHTML = '<div class="coins">' + coins + ' MASKS</div>'; // Show the coins counter
         }
     </script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
