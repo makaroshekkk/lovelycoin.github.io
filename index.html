@@ -112,14 +112,20 @@
             background-color: #444;
         }
         .leaderboard {
-            text-align: left;
+            text-align: center;
             margin-top: 20px;
-            background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 10px;
+            background: none; /* Удаление фона */
+        }
+        .leaderboard h1 {
+            font-size: 36px;
+            margin: 0;
+            padding: 0;
         }
         .leaderboard h3 {
-            margin-bottom: 10px;
+            margin: 10px 0;
+            font-size: 20px;
         }
         .leaderboard ul {
             list-style: none;
@@ -127,7 +133,8 @@
             margin: 0;
         }
         .leaderboard li {
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(255, 255, 255, 0.5); /* Белый полупрозрачный фон */
+            color: #000; /* Черный текст для контраста */
             padding: 10px;
             margin: 5px 0;
             border-radius: 5px;
@@ -146,16 +153,23 @@
         .leaderboard li span:last-child {
             text-align: right;
         }
+        .leaderboard li::before {
+            margin-right: 10px; /* Отступ между номером и ником */
+        }
     </style>
 </head>
 <body>
     <div class="content" id="mainContent">
-        <div class="coins">0 MASKS</div>
         <div class="leaderboard" id="leaderboard" style="display: none;">
+            <h1>Лидеры</h1>
             <h3>Ваше место: <span id="userRank">#</span></h3>
-            <h3>Лидерборд</h3>
+            <h3>
+                {количество пользователей} пользователей
+                <span style="float: right;">(Top 10)</span>
+            </h3>
             <ul id="leaderboardList"></ul>
         </div>
+        <div class="coins">0 MASKS</div>
     </div>
     <div class="navbar">
         <button onclick="showHome()">Домой</button>
@@ -209,12 +223,18 @@
 
         function showLeaderboard() {
             updateLeaderboard();
-            document.getElementById('mainContent').innerHTML = `
-                <div class="leaderboard" id="leaderboard">
-                    <h3>Ваше место: <span id="userRank">#</span></h3>
-                    <h3>Лидерборд</h3>
-                    <ul id="leaderboardList"></ul>
-                </div>`;
+            const userRank = document.getElementById('userRank');
+            const totalUsers = leaderboard.length;
+            document.getElementById('mainContent').innerHTML = 
+                '<div class="leaderboard" id="leaderboard">' +
+                    '<h1>Лидеры</h1>' +
+                    '<h3>Ваше место: <span id="userRank">#</span></h3>' +
+                    '<h3>' +
+                        totalUsers + ' пользователей' +
+                        '<span style="float: right;">(Top 10)</span>' +
+                    '</h3>' +
+                    '<ul id="leaderboardList"></ul>' +
+                '</div>';
             renderLeaderboard();
         }
 
@@ -237,10 +257,11 @@
                 if (index >= 10) return;
                 const li = document.createElement('li');
                 const rank = index + 1;
-                li.innerHTML = `${rank <= 3 ? '' : '#'}${rank} <span>${entry.username}</span><span>${entry.coins} MASKS</span>`;
+                const rankText = rank <= 3 ? (rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉') : `#${rank}`;
+                li.innerHTML = `${rankText} <span>${entry.username}</span><span>${entry.coins} MASKS</span>`;
                 leaderboardList.appendChild(li);
                 if (entry.username === username) {
-                    userRankElem.textContent = `${rank <= 3 ? '' : '#'}${rank}`;
+                    userRankElem.textContent = rankText;
                 }
             });
         }
@@ -262,6 +283,6 @@
             }
         }
     </script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script async src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
 </html>
