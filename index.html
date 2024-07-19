@@ -131,6 +131,8 @@
             list-style: none;
             padding: 0;
             margin: 0;
+            width: 100%; /* Растянуть на всю ширину экрана */
+            box-sizing: border-box; /* Учитывать padding и border в ширине элемента */
         }
         .leaderboard li {
             background: rgba(255, 255, 255, 0.5); /* Белый полупрозрачный фон */
@@ -140,6 +142,8 @@
             border-radius: 5px;
             display: flex;
             justify-content: space-between;
+            width: 100%; /* Растянуть на всю ширину экрана */
+            box-sizing: border-box; /* Учитывать padding и border в ширине элемента */
         }
         .leaderboard li:nth-child(1)::before { content: "🥇"; }
         .leaderboard li:nth-child(2)::before { content: "🥈"; }
@@ -147,11 +151,11 @@
         .leaderboard li:nth-child(n+4)::before { content: "#"; }
         .leaderboard li span {
             display: inline-block;
-            width: 50%;
-            text-align: left;
+            width: auto; /* Автоматическая ширина */
         }
         .leaderboard li span:last-child {
             text-align: right;
+            flex: 1; /* Занимает всё доступное пространство */
         }
         .leaderboard li::before {
             margin-right: 10px; /* Отступ между номером и ником */
