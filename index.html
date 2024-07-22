@@ -123,9 +123,16 @@
             margin: 0;
             padding: 0;
         }
-        .leaderboard h3 {
+        .leaderboard-info {
+            display: flex;
+            justify-content: space-between; /* Равномерно распределяет пространство между элементами */
+            align-items: center; /* Выравнивание по центру по вертикали */
             margin: 10px 0;
             font-size: 20px;
+            width: 100%;
+        }
+        .leaderboard-info span {
+            margin: 0 10px; /* Отступ между элементами */
         }
         .leaderboard ul {
             list-style: none;
@@ -142,7 +149,7 @@
             border-radius: 5px;
             display: flex;
             align-items: center;
-            width: 100%; /* Растянуть на всю ширину экрана */
+            width: 100vw; /* Растянуть на всю ширину экрана */
             box-sizing: border-box; /* Учитывать padding и border в ширине элемента */
         }
         .leaderboard .avatar {
@@ -178,11 +185,10 @@
     <div class="content" id="mainContent">
         <div class="leaderboard" id="leaderboard" style="display: none;">
             <h1>Лидеры</h1>
-            <h3>Ваше место: <span id="userRank">#</span></h3>
-            <h3>
-                {количество пользователей} пользователей
-                <span style="float: right;">(Top 10)</span>
-            </h3>
+            <div class="leaderboard-info">
+                <span id="userCount">{количество пользователей} пользователей</span>
+                <span id="top10">(Top 10)</span>
+            </div>
             <ul id="leaderboardList"></ul>
         </div>
         <div class="coins">0 MASKS</div>
@@ -245,11 +251,10 @@
             document.getElementById('mainContent').innerHTML = 
                 '<div class="leaderboard" id="leaderboard">' +
                     '<h1>Лидеры</h1>' +
-                    '<h3>Ваше место: <span id="userRank">#</span></h3>' +
-                    '<h3>' +
-                        totalUsers + ' пользователей' +
-                        '<span style="float: right;">(Top 10)</span>' +
-                    '</h3>' +
+                    '<div class="leaderboard-info">' +
+                        '<span id="userCount">' + totalUsers + ' игрок(-ов)</span>' +
+                        '<span id="top10">(Топ 10)</span>' +
+                    '</div>' +
                     '<ul id="leaderboardList"></ul>' +
                 '</div>';
             renderLeaderboard();
