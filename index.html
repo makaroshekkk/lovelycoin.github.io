@@ -158,13 +158,12 @@
             text-transform: uppercase;
             margin-right: 10px;
         }
-        .leaderboard li:nth-child(1)::before { content: "🥇"; }
-        .leaderboard li:nth-child(2)::before { content: "🥈"; }
-        .leaderboard li:nth-child(3)::before { content: "🥉"; }
-        .leaderboard li:nth-child(n+4)::before { content: "#"; }
         .leaderboard li span {
             display: inline-block;
             width: auto; /* Автоматическая ширина */
+        }
+        .leaderboard li span.rank {
+            margin-right: 10px; /* Отступ между медалькой и аватаркой */
         }
         .leaderboard li span:last-child {
             text-align: right;
@@ -283,9 +282,10 @@
                 avatar.style.backgroundColor = getRandomColor(); // Функция для получения случайного цвета
                 avatar.textContent = entry.username.substring(0, 2);
                 
-                // Добавление аватарки и информации о пользователе
-                li.innerHTML = `${rankText} <span>${entry.username}</span><span>${entry.coins} MASKS</span>`;
-                li.insertBefore(avatar, li.firstChild); // Вставляем аватарку перед ником
+                // Добавление медальки и аватарки с отступом
+                li.innerHTML = `<span class="rank">${rankText}</span>`;
+                li.appendChild(avatar);
+                li.innerHTML += `<span>${entry.username}</span><span>${entry.coins} MASKS</span>`;
                 leaderboardList.appendChild(li);
                 
                 if (entry.username === username) {
