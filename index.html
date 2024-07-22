@@ -149,7 +149,7 @@
             border-radius: 5px;
             display: flex;
             align-items: center;
-            width: 100vw; /* Растянуть на всю ширину экрана */
+            width: 90vw; /* Растянуть на всю ширину экрана */
             box-sizing: border-box; /* Учитывать padding и border в ширине элемента */
         }
         .leaderboard .avatar {
@@ -186,7 +186,7 @@
         <div class="leaderboard" id="leaderboard" style="display: none;">
             <h1>Лидеры</h1>
             <div class="leaderboard-info">
-                <span id="userCount">{количество пользователей} пользователей</span>
+                <span id="userCount">{количество пользователей} {форма слова}</span>
                 <span id="top10">(Top 10)</span>
             </div>
             <ul id="leaderboardList"></ul>
@@ -246,13 +246,12 @@
 
         function showLeaderboard() {
             updateLeaderboard();
-            const userRank = document.getElementById('userRank');
             const totalUsers = leaderboard.length;
             document.getElementById('mainContent').innerHTML = 
                 '<div class="leaderboard" id="leaderboard">' +
                     '<h1>Лидеры</h1>' +
                     '<div class="leaderboard-info">' +
-                        '<span id="userCount">' + totalUsers + ' игрок(-ов)</span>' +
+                        '<span id="userCount">' + totalUsers + ' ' + getPlayersText(totalUsers) + '</span>' +
                         '<span id="top10">(Топ 10)</span>' +
                     '</div>' +
                     '<ul id="leaderboardList"></ul>' +
@@ -306,6 +305,16 @@
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
+        }
+
+        function getPlayersText(count) {
+            if (count === 1) {
+                return 'игрок';
+            } else if (count > 1 && count < 5) {
+                return 'игрока';
+            } else {
+                return 'игроков';
+            }
         }
 
         function saveProgress() {
