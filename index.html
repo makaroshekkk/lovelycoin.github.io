@@ -119,17 +119,32 @@
             background: none; /* Удаление фона */
         }
         .player-rank {
-            background: rgba(255, 255, 255, 0.5); /* Белый полупрозрачный фон */
-            color: #000; /* Черный текст для контраста */
+            background: rgba(255, 255, 255, 0); /* Прозрачный фон */
+            border: 3px solid gold; /* Золотая рамка */
+            color: #fff; /* Черный текст */
             padding: 10px;
             border-radius: 10px;
             margin: 10px 0;
             text-align: center;
             font-size: 20px;
+            position: relative; /* Для правильного позиционирования эмодзи */
+        }
+        .player-rank p {
+            margin: 0; /* Удаление отступов */
+            font-size: 24px; /* Большой размер шрифта */
+            font-weight: bold; /* Жирный шрифт */
+        }
+        .player-rank::before {
+            content: '🎯'; /* Эмодзи мишени */
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px; /* Размер эмодзи */
         }
         .leaderboard-info {
             display: flex;
-            justify-content: space-between; /* Равномерно распределяет пространство между элементами */
+            justify-content: space-between; /* Равномерное распределение пространства */
             align-items: center; /* Выравнивание по центру по вертикали */
             margin: 10px 0;
             font-size: 20px;
@@ -147,7 +162,7 @@
         }
         .leaderboard li {
             background: rgba(255, 255, 255, 0.5); /* Белый полупрозрачный фон */
-            color: #000; /* Черный текст для контраста */
+            color: #000; /* Черный текст */
             padding: 10px;
             margin: 5px 0;
             border-radius: 5px;
@@ -190,10 +205,10 @@
         <div class="leaderboard" id="leaderboard" style="display: none;">
             <h1>Лидеры</h1>
             <div class="player-rank">
-                <p id="userRank">Место: 1</p>
+                <p id="userRank">Твое место: --</p>
             </div>
             <div class="leaderboard-info">
-                <span id="userCount">{количество пользователей} {форма слова}</span>
+                <span id="userCount">0 игроков</span>
                 <span id="top10">(Top 10)</span>
             </div>
             <ul id="leaderboardList"></ul>
@@ -227,6 +242,7 @@
                 username = user.username || user.first_name;
             }
             loadProgress();
+            loadLeaderboard();
             document.getElementById('welcomeModal').style.display = 'flex';
             Telegram.WebApp.expand(); // Развернуть на весь экран
         }
@@ -258,7 +274,7 @@
                 '<div class="leaderboard" id="leaderboard">' +
                     '<h1>Лидеры</h1>' +
                     '<div class="player-rank">' +
-                        '<p id="userRank">Место: 1</p>' +
+                        '<p id="userRank">Твое место: --</p>' +
                     '</div>' +
                     '<div class="leaderboard-info">' +
                         '<span id="userCount">' + totalUsers + ' ' + getPlayersText(totalUsers) + '</span>' +
@@ -309,11 +325,12 @@
                 }
             });
             
-            // Устанавливаем ранг игрока
-            if (userRank !== null) {
-                userRankElem.textContent = 'Место: ' + (userRank <= 10 ? userRank : 'Не в топ-10');
+            // Если игрок не в топ-10, находим его место в общем списке
+            if (userRank === null) {
+                const overallRank = leaderboard.findIndex(entry => entry.username === username) + 1;
+                userRankElem.textContent = 'Твое место: ' + (overallRank ? overallRank : '--');
             } else {
-                userRankElem.textContent = 'Место: Не в топ-10';
+                userRankElem.textContent = 'Твое место: ' + userRank;
             }
         }
 
@@ -352,8 +369,6 @@
         function loadLeaderboard() {
             leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
         }
-        
-        loadLeaderboard();
     </script>
 </body>
 </html>
