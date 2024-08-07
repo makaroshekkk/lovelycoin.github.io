@@ -111,12 +111,8 @@
         .modal-content button:hover {
             background-color: #444;
         }
-        .leaderboard {
-            text-align: center;
-            margin-top: 2px;
-            padding: 20px;
-            border-radius: 10px;
-            background: none; /* Удаление фона */
+        .leaderboard, .tasks, .friends, .home {
+            display: none; /* Скрыть все секции по умолчанию */
         }
         .player-rank {
             background: rgba(255, 255, 255, 0); /* Прозрачный фон */
@@ -201,24 +197,30 @@
     </style>
 </head>
 <body>
-    <div class="content" id="mainContent">
-        <div class="leaderboard" id="leaderboard" style="display: none;">
-            <h1>Лидеры</h1>
-            <div class="player-rank">
-                <p id="userRank">Твое место: --</p>
-            </div>
-            <div class="leaderboard-info">
-                <span id="userCount">0 игроков</span>
-                <span id="top10">(Top 10)</span>
-            </div>
-            <ul id="leaderboardList"></ul>
-        </div>
+    <div class="content home" id="homeContent">
         <div class="coins">0 MASKS</div>
     </div>
+    <div class="content leaderboard" id="leaderboardContent">
+        <h1>Лидеры</h1>
+        <div class="player-rank">
+            <p id="userRank">Твое место: --</p>
+        </div>
+        <div class="leaderboard-info">
+            <span id="userCount">0 игроков</span>
+            <span id="top10">(Top 10)</span>
+        </div>
+        <ul id="leaderboardList"></ul>
+    </div>
+    <iframe class="content tasks" id="tasksFrame" src="tasks.html"></iframe>
+    <div class="content friends" id="friendsContent">
+        <!-- Контент для друзей -->
+    </div>
+
     <div class="navbar">
         <button onclick="showHome()">Домой</button>
         <button onclick="showLeaderboard()">Таблица лидеров</button>
-        <button onclick="clearContent()">Друзья</button>
+        <button onclick="showFriends()">Друзья</button>
+        <button onclick="showTasks()">Задания</button>
     </div>
 
     <div id="welcomeModal" class="modal">
@@ -238,13 +240,49 @@
         window.onload = function() {
             Telegram.WebApp.ready();
             const user = Telegram.WebApp.initDataUnsafe.user;
-            if (user) {
-                username = user.username || user.first_name;
+            if (user && user.username) {
+                username = user.username;
             }
             loadProgress();
             loadLeaderboard();
-            document.getElementById('welcomeModal').style.display = 'flex';
-            Telegram.WebApp.expand(); // Развернуть на весь экран
+            showHome();
+        };
+
+        function showHome() {
+            document.getElementById('homeContent').style.display = 'block';
+            document.getElementById('leaderboardContent').style.display = 'none';
+            document.getElementById('tasksFrame').style.display = 'none';
+            document.getElementById('friendsContent').style.display = 'none';
+            updateCoins();
+        }
+
+        function showLeaderboard() {
+            updateLeaderboard();
+            const totalUsers = leaderboard.length;
+            document.getElementById('homeContent').style.display = 'none';
+            document.getElementById('leaderboardContent').style.display = 'block';
+            document.getElementById('tasksFrame').style.display = 'none';
+            document.getElementById('friendsContent').style.display = 'none';
+            document.getElementById('userCount').textContent = totalUsers + ' ' + getPlayersText(totalUsers);
+            renderLeaderboard();
+        }
+
+        function showTasks() {
+            document.getElementById('homeContent').style.display = 'none';
+            document.getElementById('leaderboardContent').style.display = 'none';
+            document.getElementById('tasksFrame').style.display = 'block';
+            document.getElementById('friendsContent').style.display = 'none';
+        }
+
+        function showFriends() {
+            document.getElementById('homeContent').style.display = 'none';
+            document.getElementById('leaderboardContent').style.display = 'none';
+            document.getElementById('tasksFrame').style.display = 'none';
+            document.getElementById('friendsContent').style.display = 'block';
+        }
+
+        function updateCoins() {
+            document.querySelector('.coins').textContent = coins + ' MASKS';
         }
 
         function claimBonus() {
@@ -252,37 +290,6 @@
             document.getElementById('welcomeModal').style.display = 'none';
             saveProgress();
             updateCoins();
-        }
-
-        function updateCoins() {
-            document.querySelector('.coins').textContent = coins + ' MASKS';
-        }
-
-        function clearContent() {
-            document.getElementById('mainContent').innerHTML = '';
-        }
-
-        function showHome() {
-            document.getElementById('mainContent').innerHTML = '<div class="coins">' + coins + ' MASKS</div>';
-            updateCoins();
-        }
-
-        function showLeaderboard() {
-            updateLeaderboard();
-            const totalUsers = leaderboard.length;
-            document.getElementById('mainContent').innerHTML = 
-                '<div class="leaderboard" id="leaderboard">' +
-                    '<h1>Лидеры</h1>' +
-                    '<div class="player-rank">' +
-                        '<p id="userRank">Твое место: --</p>' +
-                    '</div>' +
-                    '<div class="leaderboard-info">' +
-                        '<span id="userCount">' + totalUsers + ' ' + getPlayersText(totalUsers) + '</span>' +
-                        '<span id="top10">(Топ 10)</span>' +
-                    '</div>' +
-                    '<ul id="leaderboardList"></ul>' +
-                '</div>';
-            renderLeaderboard();
         }
 
         function updateLeaderboard() {
